@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "kapture0",
     "public": "dist",
     "ignore": [
       "firebase.json",
