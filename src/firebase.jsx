@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCmMAKiK81cnjRNaEX83ksEZnPVPB8_GOA",
@@ -8,9 +10,11 @@ const firebaseConfig = {
   storageBucket: "kapture-d92ee.appspot.com",
   messagingSenderId: "1022022066979",
   appId: "1:1022022066979:web:194999783bc923cc37e296",
-  measurementId: "G-YNL7QZ96CP"
+  measurementId: "G-YNL7QZ96CP",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+export const db = getFirestore(app);
+export const auth = getAuth();
