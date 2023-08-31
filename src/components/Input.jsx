@@ -1,6 +1,6 @@
-function Input({ placeholder, type, name, icon, otherProps }) {
+function Input({ placeholder, type, name, icon, otherProps, className }) {
   return (
-    <div className="px-3 h-9 rounded-md bg-secondary flex items-center">
+    <div className={`px-3 h-9 rounded-md bg-secondary flex items-center ${className} w-full`}>
       {icon ? (
         <span className="h-full py-2 mr-2 [&>*]:h-full">{icon}</span>
       ) : null}

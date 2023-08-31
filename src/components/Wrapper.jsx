@@ -1,8 +1,10 @@
 import React from "react";
 
-const Wrapper = ({ children }) => {
+const Wrapper = ({ children, className }) => {
   return (
-    <div className="w-[95%] md:w-[90%] lg:w-[85%] mx-auto">{children}</div>
+    <div className={`px-5 md:px-10 lg:px-20 w-full ${className}`}>
+      {children}
+    </div>
   );
 };
 

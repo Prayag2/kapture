@@ -1,7 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import {
+  initializeFirestore,
+  connectFirestoreEmulator,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCmMAKiK81cnjRNaEX83ksEZnPVPB8_GOA",
@@ -16,5 +19,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-export const db = getFirestore(app);
+export const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+});
 export const auth = getAuth();
+
+// Emulator Settings
+connectFirestoreEmulator(db, "127.0.0.1", 8080);
+connectAuthEmulator(auth, "http://127.0.0.1:9099");

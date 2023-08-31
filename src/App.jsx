@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuth } from "/src/contexts/AuthContext";
 import Home from "/src/pages/Home";
+import Header from "/src/shared/Header"
 import Login from "/src/pages/Login";
 import AdminDashboard from "/src/pages/AdminDashboard";
 import ProtectedRoute from "/src/components/ProtectedRoute";
@@ -11,6 +12,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+	<Header/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />

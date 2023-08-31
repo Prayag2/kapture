@@ -9,7 +9,7 @@ export default {
       transparent: "#00000000",
       text: "#030607",
       background: "#ffffff",
-      "background-dark": "#e6e6e6",
+      "background-dark": "#f5f2fc",
       "primary-light": "#686086",
       primary: "#514B68",
       "primary-dark": "#3A364A",
