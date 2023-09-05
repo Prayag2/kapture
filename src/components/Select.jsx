@@ -10,6 +10,7 @@ const Select = ({
   defaultValue,
   className,
   onChange,
+  refEl,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [selected, setSelected] = useState(defaultValue ? [defaultValue] : []);
@@ -18,9 +19,17 @@ const Select = ({
 
   useEffect(() => {
     document.addEventListener("click", (e) => {
-      if (e.target === selectDivEl.current) console.log("Clicked");
+      if (e.target === selectDivEl.current) {
+        e.stopPropagation();
+        return;
+      }
+      setExpanded(false);
     });
   }, []);
+
+  useEffect(() => {
+    if (refEl) refEl.current = selectEl.current;
+  }, [selectEl.current]);
 
   const colours = {
     primary: {
@@ -164,7 +173,8 @@ Select.defaultProps = {
   multiple: false,
   defaultValue: null,
   className: "",
-  onChange: ()=>{}
+  onChange: () => {},
+  refEl: null,
 };
 
 export default Select;

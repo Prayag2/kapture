@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, forwardRef } from "react";
+import Loading from "/src/components/Loading";
 
-const Image = ({ alt, src, className, imageClassName }) => {
+const Image = forwardRef(({ alt, src, className, imageClassName }, ref) => {
   const [loading, setLoading] = useState(true);
   return (
-    <div className={`${className}`}>
-      {loading && "Loading..."}
+    <div className={`${className} h-full w-full`}>
+      {loading && <Loading />}
       <img
+        ref={ref}
         className={imageClassName}
         onLoad={() => setLoading(false)}
         alt={alt}
@@ -13,6 +15,10 @@ const Image = ({ alt, src, className, imageClassName }) => {
       />
     </div>
   );
+});
+
+Image.defaultProps = {
+  className: "",
 };
 
 export default Image;

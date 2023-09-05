@@ -65,8 +65,9 @@ const ImageGallery = ({ media }) => {
           className={`w-full overflow-hidden rounded-md aspect-square bg-white cursor-zoom-in`}
         >
           <Image
+            ref={mainImage}
             src={currentMedium.url}
-            alt="hello"
+            alt={currentMedium.alt}
             imageClassName="w-full h-full object-contain transition-all duration-200 ease-out"
           />
         </div>

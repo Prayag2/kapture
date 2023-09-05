@@ -22,7 +22,7 @@ const Cart = () => {
           isCartOpen ? "right-0" : "right-[-100%]"
         } w-full max-w-[25rem] h-full bg-background z-50 shadow-lg p-5 overflow-y-scroll`}
       >
-        <Title className="text-center">Your Bag</Title>
+        <Title className="text-center">Your Cart</Title>
 
         <ul aria-label="Cart Items">
           {cartData.length ? (
@@ -39,7 +39,7 @@ const Cart = () => {
               </li>
             ))
           ) : (
-            <p className="text-center">Your Bag Is Empty</p>
+            <p className="text-center">Your Cart Is Empty</p>
           )}
         </ul>
       </div>

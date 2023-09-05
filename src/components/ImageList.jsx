@@ -32,7 +32,7 @@ const ImageList = ({
                 medium.type === "video" && "p-2"
               }`}
               src={medium.isVideo ? "/images/icons/play.svg" : medium.url}
-              alt="Thumbnail 1"
+              alt={medium.alt}
             />
           </button>
         </li>

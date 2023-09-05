@@ -25,7 +25,7 @@ const CartCard = ({ product, quantity }) => {
       </div>
       <div className="w-full h-full flex flex-col justify-between">
         <div>
-          <h3 className="w-52 truncate text-lg">{product.name}</h3>
+          <h3 className="w-44 md:w-52 truncate text-lg">{product.name}</h3>
           <span className="font-bold font-display text-lg mr-3 inline-block mb-3">
             ₹{product.price}
           </span>

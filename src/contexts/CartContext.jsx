@@ -19,6 +19,7 @@ const CartContextProvider = ({ children }) => {
   };
 
   const addToCart = (product, quantity) => {
+    quantity = parseInt(quantity);
     if (isProductInCart(product.productID)) return;
     setCartData((prev) => [...prev, { product, quantity }]);
     setIsCartOpen(true);

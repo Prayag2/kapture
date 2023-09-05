@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Wrapper from "/src/components/Wrapper";
 import Accordian from "/src/components/Accordian";
@@ -14,10 +14,11 @@ import { useCart } from "/src/contexts/CartContext";
 import { useFirestore } from "/src/contexts/FirestoreContext";
 
 const Product = ({ product }) => {
-  const { isProductInCart, addToCart, deleteFromCart } = useCart();
-  const navigate = useNavigate();
+  const { isProductInCart, addToCart, setIsCartOpen } = useCart();
   const { getProductVariations } = useFirestore();
   const [variations, setVariations] = useState([]);
+  const navigate = useNavigate();
+  const quantityEl = useRef();
 
   useEffect(() => {
     if (product.hasOwnProperty("variations"))
@@ -38,25 +39,26 @@ const Product = ({ product }) => {
           <h2 className="text-xl md:text-2xl font-bold font-display mb-5">
             {product.name}
           </h2>
-          <p
-            aria-label="MRP"
-            className="line-through text-primary text-lg mb-2"
-          >
-            ₹{product.mrp}
+          <p aria-label="price" className="font-bold font-display mb-3">
+            <span
+              className="font-normal text-accent mr-3 text-xl md:text-2xl"
+              aria-label="discount"
+            >
+              -{Math.floor(100 - (product.price / product.mrp) * 100)}%
+            </span>
+            <span className="text-2xl md:text-3xl">₹{product.price}</span>
           </p>
-          <p
-            aria-label="price"
-            className="font-bold font-display text-2xl md:text-3xl mb-4"
-          >
-            ₹{product.price}
+          <p aria-label="MRP" className="text-primary text-lg mb-4">
+            MRP: <span className="line-through">₹{product.mrp}</span>
           </p>
           <div className="w-full space-y-2">
             {product.hasOwnProperty("variations") ? (
               <div>
                 <p className="text-lg capitalize">
-                  Select {product.variations.name}
+                  {product.variations.name}: {product.variationName}
                 </p>
                 <ImageList
+                  key={product.productID}
                   media={variations.map((v) => v.media[0])}
                   onClick={(index) =>
                     navigate(`/product/${variations[index].productID}`)
@@ -68,9 +70,10 @@ const Product = ({ product }) => {
               </div>
             ) : null}
             <Select
+              refEl={quantityEl}
               name="quantity"
               colour="secondary"
-              placeholder="Select Quantity"
+              placeholder="Quantity"
               defaultValue={1}
               options={Array.from(Array(product.quantity + 1).keys())
                 .slice(1)
@@ -84,21 +87,21 @@ const Product = ({ product }) => {
               className="w-full"
               onClick={() =>
                 isProductInCart(product.productID)
-                  ? deleteFromCart(product.productID)
-                  : addToCart(product, 1)
+                  ? setIsCartOpen(true)
+                  : addToCart(product, quantityEl.current.value)
               }
               icon={
                 <img
                   src={`/images/icons/${
-                    isProductInCart(product.productID) ? "trash" : "bag"
+                    isProductInCart(product.productID) ? "check" : "cart"
                   }.svg`}
                   className="invert"
                 />
               }
             >
               {isProductInCart(product.productID)
-                ? "Remove From Bag"
-                : "Add To Bag"}
+                ? "Added To Cart"
+                : "Add To Cart"}
             </Button>
           </div>
         </div>

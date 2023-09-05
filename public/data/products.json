@@ -22,14 +22,17 @@
       "name": "colour",
       "products": ["pJhDkTbFqR", "bFtDkRjZqG", "qRgZtFbTkJ"]
     },
+    "variationName": "Black",
     "media": [
       {
         "url": "https://picsum.photos/seed/pJhDkTbFqR-0/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Black Silicone Strap - Image 1"
       },
       {
         "url": "https://picsum.photos/seed/pJhDkTbFqR-1/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Black Silicone Strap - Image 2"
       }
     ]
   },
@@ -56,14 +59,17 @@
       "name": "colour",
       "products": ["pJhDkTbFqR", "bFtDkRjZqG", "qRgZtFbTkJ"]
     },
+    "variationName": "Blue",
     "media": [
       {
         "url": "https://picsum.photos/seed/bFtDkRjZqG-0/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Blue Silicone Strap - Image 1"
       },
       {
         "url": "https://picsum.photos/seed/bFtDkRjZqG-1/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Blue Silicone Strap - Image 2"
       }
     ]
   },
@@ -90,14 +96,17 @@
       "name": "colour",
       "products": ["pJhDkTbFqR", "bFtDkRjZqG", "qRgZtFbTkJ"]
     },
+    "variationName": "Red",
     "media": [
       {
         "url": "https://picsum.photos/seed/qRgZtFbTkJ-0/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Red Silicone Strap - Image 1"
       },
       {
         "url": "https://picsum.photos/seed/qRgZtFbTkJ-1/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Red Silicone Strap - Image 2"
       }
     ]
   },
@@ -123,11 +132,13 @@
     "media": [
       {
         "url": "https://picsum.photos/seed/fCbhFBPwTj-0/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Black Silicone Strap - Image 1"
       },
       {
         "url": "https://picsum.photos/seed/fCbhFBPwTj-1/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Black Silicone Strap - Image 2"
       }
     ]
   },
@@ -153,11 +164,13 @@
     "media": [
       {
         "url": "https://picsum.photos/seed/rDgPtCmXzK-0/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Silver Stainless Steel Band - Image 1"
       },
       {
         "url": "https://picsum.photos/seed/rDgPtCmXzK-1/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Silver Stainless Steel Band - Image 2"
       }
     ]
   },
@@ -183,11 +196,13 @@
     "media": [
       {
         "url": "https://picsum.photos/seed/wZnGxYpQbR-0/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Brown Leather Band - Image 1"
       },
       {
         "url": "https://picsum.photos/seed/wZnGxYpQbR-1/2000",
-        "isVideo": false
+        "isVideo": false,
+        "alt": "Brown Leather Band - Image 2"
       }
     ]
   }

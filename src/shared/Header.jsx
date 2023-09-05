@@ -70,7 +70,7 @@ const Header = () => {
               <Button
                 onClick={() => setIsCartOpen(true)}
                 colour="background"
-                icon={<img alt="" src="/images/icons/bag.svg" />}
+                icon={<img alt="" src="/images/icons/cart.svg" />}
                 badgeText={cartQuantity.toString()}
                 circle
               ></Button>
@@ -79,7 +79,9 @@ const Header = () => {
                   colour="background"
                   icon={<img alt="" src="/images/icons/user.svg" />}
                   circle
-                ></Button>
+                >
+                  Sign Up
+                </Button>
               </div>
               <div className="lg:hidden">
                 <Button

@@ -5,7 +5,7 @@ import { useCart } from "/src/contexts/CartContext";
 
 const ProductCard = ({ product, badgeText }) => {
   const navigate = useNavigate();
-  const { addToCart, isProductInCart, deleteFromCart } = useCart();
+  const { addToCart, isProductInCart, setIsCartOpen } = useCart();
 
   return (
     <div
@@ -36,7 +36,7 @@ const ProductCard = ({ product, badgeText }) => {
           colour="accent"
           onClick={() =>
             isProductInCart(product.productID)
-              ? deleteFromCart(product.productID)
+              ? setIsCartOpen(true)
               : addToCart(product, 1, 0)
           }
           icon={
@@ -44,7 +44,7 @@ const ProductCard = ({ product, badgeText }) => {
               className="invert"
               alt="Buy"
               src={`/images/icons/${
-                isProductInCart(product.productID) ? "trash" : "bag"
+                isProductInCart(product.productID) ? "check" : "cart"
               }.svg`}
             />
           }
