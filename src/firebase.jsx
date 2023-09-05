@@ -25,5 +25,5 @@ export const db = initializeFirestore(app, {
 export const auth = getAuth();
 
 // Emulator Settings
-connectFirestoreEmulator(db, "127.0.0.1", 8080);
-connectAuthEmulator(auth, "http://127.0.0.1:9099");
+//connectFirestoreEmulator(db, "127.0.0.1", 8080);
+//connectAuthEmulator(auth, "http://127.0.0.1:9099");

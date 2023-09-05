@@ -5,9 +5,11 @@ import Input from "/src/components/Input";
 import Logo from "/src/components/Logo";
 
 import { useState } from "react";
+import { useCart } from "/src/contexts/CartContext";
 
 const Header = () => {
   const [navOpen, setNavOpen] = useState(false);
+  const { setIsCartOpen, cartQuantity } = useCart();
   const toggleNav = () => setNavOpen((p) => !p);
 
   const navLinks = [
@@ -46,14 +48,14 @@ const Header = () => {
 
   return (
     <>
-      <header className="w-full h-[10vh] fixed z-10">
+      <header className="w-full h-[10vh] fixed z-10 bg-background">
         <Wrapper className="flex justify-between items-center h-full">
           <div className="flex items-center gap-10">
             <Logo />
             <Nav navLinks={navLinks} navOpen={navOpen} toggleNav={toggleNav} />
           </div>
           <div className="flex items-center gap-10">
-            <div className="hidden md:block w-64">
+            <div className="hidden md:block w-48 xl:w-64">
               <Input
                 icon={<img alt="" src="/images/icons/search.svg" />}
                 placeholder="Search products"
@@ -66,8 +68,10 @@ const Header = () => {
                 circle
               ></Button>
               <Button
+                onClick={() => setIsCartOpen(true)}
                 colour="background"
                 icon={<img alt="" src="/images/icons/bag.svg" />}
+                badgeText={cartQuantity.toString()}
                 circle
               ></Button>
               <div className="hidden lg:block">

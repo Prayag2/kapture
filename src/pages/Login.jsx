@@ -4,7 +4,7 @@ import { useAuth } from "/src/contexts/AuthContext";
 import Input from "/src/components/Input";
 import Button from "/src/components/Button";
 
-const AdminLogin = () => {
+const Login = () => {
   const { login, logout, currentUser } = useAuth();
   const formEl = useRef();
 
@@ -38,4 +38,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default Login;

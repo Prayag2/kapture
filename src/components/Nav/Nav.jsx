@@ -39,7 +39,7 @@ const Nav = ({ navLinks, className, navOpen, toggleNav }) => {
         onClick={toggleNav}
         className={`fixed top-0 w-full h-[100vh] bg-secondary transition-[left] ${
           navOpen ? "left-0" : "left-[-100%]"
-        } z-10 text-lg py-5`}
+        } z-50 text-lg py-5`}
       >
         <Wrapper className="space-y-5">
           <div className="flex justify-between items-center">

@@ -1,10 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuth } from "/src/contexts/AuthContext";
 import Home from "/src/pages/Home";
-import Header from "/src/shared/Header"
+import Header from "/src/shared/Header";
+import Cart from "/src/shared/Cart";
 import Login from "/src/pages/Login";
+import Product from "/src/pages/Product";
 import AdminDashboard from "/src/pages/AdminDashboard";
 import ProtectedRoute from "/src/components/ProtectedRoute";
+import ProductRoutes from "/src/routes/ProductRoutes";
 
 function App() {
   const { isAdmin, currentUser } = useAuth();
@@ -12,10 +15,11 @@ function App() {
   return (
     <>
       <BrowserRouter>
-	<Header/>
+        <Header />
+        <Cart />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
+          <Route path="/product/*" element={<ProductRoutes />} />
           <Route
             element={<ProtectedRoute condition={isAdmin} redirect="/login" />}
           >
@@ -26,6 +30,7 @@ function App() {
           >
             <Route path="/login" element={<Login />} />
           </Route>
+          <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </BrowserRouter>
     </>

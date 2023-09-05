@@ -85,3 +85,18 @@
 
 * Technologies
 * Testing
+
+
+* Checklist
+** Frontend
+- [X] Home Page
+- [ ] Product Page
+- [ ] Search Page
+- [ ] Cart
+** Backend
+
+* Firestore
+** Orders
+** Admins
+** Products
+** Reviews

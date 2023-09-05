@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "image": "https://placehold.co/500x500",
+    "name": "watch strap"
+  },
+  {
+    "id": 2,
+    "image": "https://placehold.co/500x500",
+    "name": "fitness tracker"
+  },
+  {
+    "id": 3,
+    "image": "https://placehold.co/500x500",
+    "name": "watches"
+  },
+  {
+    "id": 4,
+    "image": "https://placehold.co/500x500",
+    "name": "accessories"
+  },
+  {
+    "id": 5,
+    "image": "https://placehold.co/500x500",
+    "name": "audio"
+  },
+  {
+    "id": 6,
+    "image": "https://placehold.co/500x500",
+    "name": "security"
+  },
+  {
+    "id": 7,
+    "image": "https://placehold.co/500x500",
+    "name": "fitness"
+  }
+]

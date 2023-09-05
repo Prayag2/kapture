@@ -1,9 +1,26 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
-const Select = ({ name, placeholder, options, multiple, colour, icon }) => {
+const Select = ({
+  name,
+  placeholder,
+  options,
+  multiple,
+  colour,
+  icon,
+  defaultValue,
+  className,
+  onChange,
+}) => {
   const [expanded, setExpanded] = useState(false);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(defaultValue ? [defaultValue] : []);
   const selectEl = useRef();
+  const selectDivEl = useRef();
+
+  useEffect(() => {
+    document.addEventListener("click", (e) => {
+      if (e.target === selectDivEl.current) console.log("Clicked");
+    });
+  }, []);
 
   const colours = {
     primary: {
@@ -28,7 +45,10 @@ const Select = ({ name, placeholder, options, multiple, colour, icon }) => {
     },
   };
 
-  const toggleExpanded = () => setExpanded((prev) => !prev);
+  const toggleExpanded = (e) => {
+    e.stopPropagation();
+    setExpanded((prev) => !prev);
+  };
   const enableChoice = (value, id) => {
     selectEl.current[id].selected = true;
     if (multiple) {
@@ -36,20 +56,23 @@ const Select = ({ name, placeholder, options, multiple, colour, icon }) => {
     } else {
       setSelected([value]);
     }
+    onChange(selectEl.current);
   };
 
   const disableChoice = (option) => {
     selectEl.current[options.indexOf(option)].selected = false;
     setSelected(selected.filter((item) => item !== option));
+    onChange(selectEl.current);
   };
 
   return (
-    <div>
+    <div className={className}>
       <select
         ref={selectEl}
         id={name}
         name={name}
         className="hidden"
+        defaultValue={defaultValue}
         multiple={multiple}
       >
         {options.map((option, id) => (
@@ -59,21 +82,24 @@ const Select = ({ name, placeholder, options, multiple, colour, icon }) => {
         ))}
       </select>
       <div
-        className={`cursor-pointer select-none rounded-md ${colours[colour].bg}`}
+        className={`cursor-pointer select-none rounded-md ${colours[colour].bg} relative`}
         onClick={toggleExpanded}
         onMouseDown={(e) => e.preventDefault()}
         tabIndex="0"
         onFocus={() => setExpanded(true)}
         onBlur={() => setExpanded(false)}
       >
-        <p className="relative h-9 block leading-9 px-3 flex items-center pr-10">
+        <p
+          ref={selectDivEl}
+          className="relative h-10 block leading-9 px-3 flex items-center pr-10"
+        >
           {icon ? (
             <span className="h-full py-2 mr-2 [&>*]:h-full">{icon}</span>
           ) : null}
           {multiple
             ? placeholder
             : selected.length > 0
-            ? selected
+            ? `${placeholder}: ${selected}`
             : placeholder}
 
           <span className="h-4 absolute top-1/2 right-2 translate-y-[-50%]">
@@ -91,7 +117,11 @@ const Select = ({ name, placeholder, options, multiple, colour, icon }) => {
             </svg>
           </span>
         </p>
-        <div className={`${!expanded && "hidden"} w-full pb-3`}>
+        <div
+          className={`${!expanded && "hidden"} absolute top-12 ${
+            colours[colour].bg
+          } rounded-md left-0 w-full py-2 max-h-[10rem] overflow-y-scroll z-10 shadow-md`}
+        >
           {options.map((option, id) => {
             if (multiple && selected.includes(option)) return null;
             return (
@@ -99,7 +129,7 @@ const Select = ({ name, placeholder, options, multiple, colour, icon }) => {
                 key={`option-${id}`}
                 onClick={(e) => enableChoice(e.target.dataset.value, id)}
                 data-value={option}
-                className={`mx-3 px-3 h-8 rounded-md flex items-center ${colours[colour].hover}`}
+                className={`mx-2 px-3 h-8 rounded-md flex items-center ${colours[colour].hover}`}
                 tabIndex={-1}
               >
                 {option}
@@ -132,6 +162,9 @@ Select.defaultProps = {
   colour: "primary",
   placeholder: "Select from the following",
   multiple: false,
+  defaultValue: null,
+  className: "",
+  onChange: ()=>{}
 };
 
 export default Select;

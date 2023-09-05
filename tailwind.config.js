@@ -7,6 +7,7 @@ export default {
     extend: {},
     colors: {
       transparent: "#00000000",
+      white: "#fff",
       text: "#030607",
       background: "#ffffff",
       "background-dark": "#f5f2fc",
