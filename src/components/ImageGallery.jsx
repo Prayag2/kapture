@@ -36,9 +36,7 @@ const ImageGallery = ({ media }) => {
     if (!zoomEnabled) return;
     const wrapperRect = imageWrapper.current.getBoundingClientRect();
     const imageRect = mainImage.current.getBoundingClientRect();
-
     const touchingLeft = imageRect.left > wrapperRect.left;
-
     let xOffset =
       Math.floor(e.clientX - wrapperRect.left - wrapperRect.width / 2) * -1;
     let yOffset =
@@ -62,6 +60,7 @@ const ImageGallery = ({ media }) => {
           ref={imageWrapper}
           onClick={toggleZoom}
           onMouseMove={handleZoom}
+	  onMouseLeave={zoomOutImage}
           className={`w-full overflow-hidden rounded-md aspect-square bg-white cursor-zoom-in`}
         >
           <Image

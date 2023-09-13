@@ -1,22 +1,26 @@
-import React from "react";
 import Button from "/src/components/Button";
+import Image from "/src/components/Image";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "/src/contexts/CartContext";
 
-const ProductCard = ({ product, badgeText }) => {
+const ProductCard = ({ product, badgeText, horizontal, className }) => {
   const navigate = useNavigate();
   const { addToCart, isProductInCart, setIsCartOpen } = useCart();
 
   return (
     <div
-      className="cursor-pointer w-72 text-left group"
-      onClick={() => navigate(`/product/${product.productID}`)}
-    >
-      <div className="w-full aspect-square rounded-md overflow-hidden mb-4 relative bg-primary">
-        <img
+      className={`cursor-pointer ${
+        horizontal ? "sm:w-full sm:h-40 sm:flex-row" : "sm:w-72"
+      } text-left group flex w-full flex-col ${className}`}
+      onClick={() => navigate(`/product/${product.itemID}`)}>
+      <div
+        className={`${
+          horizontal && "sm:h-full"
+        } aspect-square rounded-md overflow-hidden mb-4 relative bg-primary shrink-0`}>
+        <Image
           alt=""
           src={product.media[0].url}
-          className="w-full h-full object-contain transition-[transform] group-hover:scale-105 bg-white"
+          imageClassName="object-contain transition-[transform] group-hover:scale-105 bg-white"
         />
         {badgeText ? (
           <span className="absolute top-2 left-2 bg-accent rounded text-background py-1 px-2 uppercase text-sm">
@@ -24,10 +28,19 @@ const ProductCard = ({ product, badgeText }) => {
           </span>
         ) : null}
       </div>
-      <div className="w-full flex justify-between items-center">
-        <div>
-          <h3 className="w-60 text-lg truncate">{product.name}</h3>
-          <span className="font-bold font-display text-xl mr-3">
+      <div
+        className={`w-full flex justify-between items-left ${
+          horizontal && "sm:flex-col sm:pl-5"
+        }`}>
+        <div className={`w-[80%] ${horizontal ? "sm:w-[90%]" : ""}`}>
+          <h3
+            className={`${horizontal && "sm:text-xl"} w-full text-lg truncate`}>
+            {product.name}
+          </h3>
+          <span
+            className={`font-bold font-display ${
+              horizontal ? "sm:text-2xl" : ""
+            } text-xl mr-3`}>
             ₹{product.price}
           </span>
           <span className="text-primary line-through">₹{product.mrp}</span>
@@ -35,7 +48,7 @@ const ProductCard = ({ product, badgeText }) => {
         <Button
           colour="accent"
           onClick={() =>
-            isProductInCart(product.productID)
+            isProductInCart(product.itemID)
               ? setIsCartOpen(true)
               : addToCart(product, 1, 0)
           }
@@ -44,23 +57,27 @@ const ProductCard = ({ product, badgeText }) => {
               className="invert"
               alt="Buy"
               src={`/images/icons/${
-                isProductInCart(product.productID) ? "check" : "cart"
+                isProductInCart(product.itemID) ? "check" : "cart"
               }.svg`}
             />
-          }
-        ></Button>
+          }>
+          {horizontal && (
+            <span className="hidden sm:inline">
+              {isProductInCart(product.itemID)
+                ? "Added To Cart"
+                : "Add to Cart"}
+            </span>
+          )}
+        </Button>
       </div>
     </div>
   );
 };
 
 ProductCard.defaultProps = {
-  image: "/images/categories/strap.jpg",
-  title: "This is a brand new product with the best features!!",
-  price: 699,
-  mrp: 999,
   to: "/",
   badgeText: "sale",
+  horizontal: false,
 };
 
 export default ProductCard;

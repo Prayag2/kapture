@@ -1,8 +1,8 @@
 import React from "react";
 
-const Loading = () => {
+const Loading = ({fullScreen}) => {
   return (
-    <div className="w-full h-full flex justify-center items-center">
+    <div className={`${fullScreen ? "fixed top-0 left-0" : ""} w-full h-full flex justify-center items-center`}>
       <svg
         className="animate-spin h-10 aspect-square"
         viewBox="0 0 24 24"
@@ -19,5 +19,9 @@ const Loading = () => {
     </div>
   );
 };
+
+Loading.defaultProps = {
+  fullScreen: false
+}
 
 export default Loading;

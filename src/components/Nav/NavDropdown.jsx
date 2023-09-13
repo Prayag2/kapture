@@ -49,7 +49,7 @@ const NavDropdown = ({ to, name, navLinks, touch, onClick }) => {
         />
       </NavItem>
       <div
-        className={`bg-secondary absolute top-8 px-5 py-3 space-y-3 rounded-md w-60 ${
+        className={`bg-secondary absolute top-8 px-5 py-3 space-y-3 rounded-md w-60 shadow-md ${
           isOpen ? "block" : "hidden"
         }`}
       >

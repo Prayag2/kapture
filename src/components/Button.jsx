@@ -25,7 +25,7 @@ function Button({
   return (
     <button
       onClick={handleClick}
-      className={`${children ? "px-3" : "px-2"} h-10 min-w-[2.5rem] ${
+      className={`px-2 h-10 min-w-[2.5rem] ${
         circle ? "rounded-full" : "rounded-md"
       } ${
         colours[colour]

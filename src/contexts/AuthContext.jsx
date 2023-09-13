@@ -50,7 +50,7 @@ function AuthContextProvider({ children }) {
 
   return (
     <authContext.Provider value={{ login, logout, currentUser, isAdmin }}>
-      {loginLoading ? <Loading /> : children}
+      {loginLoading ? <Loading fullScreen /> : children}
     </authContext.Provider>
   );
 }

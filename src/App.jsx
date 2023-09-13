@@ -4,10 +4,12 @@ import Home from "/src/pages/Home";
 import Header from "/src/shared/Header";
 import Cart from "/src/shared/Cart";
 import Login from "/src/pages/Login";
-import Product from "/src/pages/Product";
+import Search from "/src/pages/Search";
+import NotFound from "/src/pages/NotFound";
 import AdminDashboard from "/src/pages/AdminDashboard";
 import ProtectedRoute from "/src/components/ProtectedRoute";
 import ProductRoutes from "/src/routes/ProductRoutes";
+import AdminRoutes from "/src/routes/AdminRoutes";
 
 function App() {
   const { isAdmin, currentUser } = useAuth();
@@ -20,17 +22,18 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product/*" element={<ProductRoutes />} />
+          <Route path="/dashboard/*" element={<AdminRoutes />} />
+          <Route path="/search/" element={<Search />} />
+          <Route path="/category/:categoryID" element={<Search />} />
           <Route
-            element={<ProtectedRoute condition={isAdmin} redirect="/login" />}
-          >
+            element={<ProtectedRoute condition={isAdmin} redirect="/login" />}>
             <Route path="/dashboard" element={<AdminDashboard />}></Route>
           </Route>
           <Route
-            element={<ProtectedRoute condition={!currentUser} redirect="/" />}
-          >
+            element={<ProtectedRoute condition={!currentUser} redirect="/" />}>
             <Route path="/login" element={<Login />} />
           </Route>
-          <Route path="*" element={<h1>404 Not Found</h1>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -1,0 +1,16 @@
+import {createContext, useState, useContext} from 'react';
+
+const loadingContext = createContext();
+export const useLoading = () => useContext(loadingContext);
+
+const LoadingContext = () => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div>
+
+    </div>
+  );
+};
+
+export default LoadingContext;

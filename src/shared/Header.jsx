@@ -4,13 +4,18 @@ import Button from "/src/components/Button";
 import Input from "/src/components/Input";
 import Logo from "/src/components/Logo";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "/src/contexts/CartContext";
+import { useFirestore } from "/src/contexts/FirestoreContext";
 
 const Header = () => {
   const [navOpen, setNavOpen] = useState(false);
-  const { setIsCartOpen, cartQuantity } = useCart();
   const toggleNav = () => setNavOpen((p) => !p);
+  const navigate = useNavigate();
+
+  const { setIsCartOpen, cartQuantity } = useCart();
+  const { categoryData } = useFirestore();
 
   const navLinks = [
     {
@@ -21,23 +26,13 @@ const Header = () => {
     {
       name: "Categories",
       type: "dropdown",
-      children: [
-        {
-          name: "Watch Straps",
+      children: categoryData.map((item) => {
+        return {
+          name: item.name,
           type: "link",
-          to: "/products/categories/straps",
-        },
-        {
-          name: "Toys",
-          type: "link",
-          to: "/products/categories/toys",
-        },
-        {
-          name: "Stationary",
-          type: "link",
-          to: "/products/categories/stationary",
-        },
-      ],
+          to: `/category/${item.itemID}`,
+        };
+      }),
     },
     {
       name: "Support",
@@ -54,43 +49,27 @@ const Header = () => {
             <Logo />
             <Nav navLinks={navLinks} navOpen={navOpen} toggleNav={toggleNav} />
           </div>
-          <div className="flex items-center gap-10">
-            <div className="hidden md:block w-48 xl:w-64">
-              <Input
-                icon={<img alt="" src="/images/icons/search.svg" />}
-                placeholder="Search products"
-              />
-            </div>
-            <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
+            <Button
+              colour="background"
+              icon={<img alt="" src="/images/icons/search.svg" />}
+              onClick={() => navigate("/search")}
+              circle
+            ></Button>
+            <Button
+              onClick={() => setIsCartOpen(true)}
+              colour="background"
+              icon={<img alt="" src="/images/icons/cart.svg" />}
+              badgeText={cartQuantity.toString()}
+              circle
+            ></Button>
+            <div className="lg:hidden">
               <Button
+                onClick={toggleNav}
                 colour="background"
-                icon={<img alt="" src="/images/icons/heart.svg" />}
+                icon={<img alt="" src="/images/icons/menu.svg" />}
                 circle
               ></Button>
-              <Button
-                onClick={() => setIsCartOpen(true)}
-                colour="background"
-                icon={<img alt="" src="/images/icons/cart.svg" />}
-                badgeText={cartQuantity.toString()}
-                circle
-              ></Button>
-              <div className="hidden lg:block">
-                <Button
-                  colour="background"
-                  icon={<img alt="" src="/images/icons/user.svg" />}
-                  circle
-                >
-                  Sign Up
-                </Button>
-              </div>
-              <div className="lg:hidden">
-                <Button
-                  onClick={toggleNav}
-                  colour="background"
-                  icon={<img alt="" src="/images/icons/menu.svg" />}
-                  circle
-                ></Button>
-              </div>
             </div>
           </div>
         </Wrapper>

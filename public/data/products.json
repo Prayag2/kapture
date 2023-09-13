@@ -4,7 +4,7 @@
     "name": "Redmi Smart Band Pro Silicone Strap Black",
     "mrp": 999,
     "price": 499,
-    "category": "Watch Strap",
+    "categoryID": "Watch Strap",
     "description": "Upgrade your Redmi Smart Band with this high-quality silicone strap in classic black. This strap is designed for comfort and durability, making it perfect for daily wear. Its adjustable length ensures a secure fit for all wrist sizes. The stainless steel buckle adds a touch of elegance to your smart band. Enhance your style with this Redmi Smart Band Pro Silicone Strap.",
     "warranty": "No warranty",
     "specifications": {
@@ -34,7 +34,8 @@
         "isVideo": false,
         "alt": "Black Silicone Strap - Image 2"
       }
-    ]
+    ],
+    "tags": ["Smart Band", "Watch Strap", "Silicone", "Black", "Redmi", "Fashion", "Adjustable", "Tech Accessory", "Stainless Steel", "Fitness"]
   },
   {
     "productID": "bFtDkRjZqG",
@@ -71,7 +72,8 @@
         "isVideo": false,
         "alt": "Blue Silicone Strap - Image 2"
       }
-    ]
+    ],
+    "tags": ["Smart Band", "Watch Strap", "Silicone", "Blue", "Redmi", "Fashion", "Adjustable", "Tech Accessory", "Stainless Steel", "Fitness"]
   },
   {
     "productID": "qRgZtFbTkJ",
@@ -108,7 +110,8 @@
         "isVideo": false,
         "alt": "Red Silicone Strap - Image 2"
       }
-    ]
+    ],
+    "tags": ["Smart Band", "Watch Strap", "Silicone", "Red", "Redmi", "Fashion", "Adjustable", "Tech Accessory", "Stainless Steel", "Fitness"]
   },
   {
     "productID": "fCbhFBPwTj",
@@ -140,7 +143,8 @@
         "isVideo": false,
         "alt": "Black Silicone Strap - Image 2"
       }
-    ]
+    ],
+    "tags": ["Smart Band", "Watch Strap", "Silicone", "Black", "Amazfit", "Fashion", "Adjustable", "Tech Accessory", "Stainless Steel", "Fitness"]
   },
   {
     "productID": "rDgPtCmXzK",
@@ -172,7 +176,8 @@
         "isVideo": false,
         "alt": "Silver Stainless Steel Band - Image 2"
       }
-    ]
+    ],
+    "tags": ["Smartwatch Band", "Watch Strap", "Stainless Steel", "Silver", "Samsung", "Fashion", "Adjustable", "Tech Accessory", "Premium", "Fitness"]
   },
   {
     "productID": "wZnGxYpQbR",
@@ -204,6 +209,7 @@
         "isVideo": false,
         "alt": "Brown Leather Band - Image 2"
       }
-    ]
+    ],
+    "tags": ["Smartwatch Band", "Watch Strap", "Genuine Leather", "Brown", "Apple Watch", "Fashion", "Adjustable", "Tech Accessory", "Luxury", "Elegance"]
   }
 ]

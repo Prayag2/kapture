@@ -7,13 +7,7 @@ const ProductRoutes = () => {
 
   return (
     <Routes>
-      {productData.map((product, id) => (
-        <Route
-          key={id}
-          path={product.productID.toString()}
-          element={<Product product={product} />}
-        ></Route>
-      ))}
+      <Route path=":itemID" element={<Product />} />
     </Routes>
   );
 };

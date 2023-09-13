@@ -7,7 +7,7 @@ import CartContextProvider from "/src/contexts/CartContext";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AuthContextProvider>
       <FirestoreContextProvider>
         <CartContextProvider>
@@ -15,5 +15,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </CartContextProvider>
       </FirestoreContextProvider>
     </AuthContextProvider>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 );

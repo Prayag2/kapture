@@ -1,11 +1,10 @@
 import { useCart } from "/src/contexts/CartContext";
-import { useFirestore } from "/src/contexts/FirestoreContext";
 import Title from "/src/components/Title";
 import CartCard from "/src/components/CartCard";
+import Button from "/src/components/Button";
 
 const Cart = () => {
   const { isCartOpen, setIsCartOpen, cartData } = useCart();
-  const { getProduct } = useFirestore();
 
   return (
     <>
@@ -23,12 +22,20 @@ const Cart = () => {
         } w-full max-w-[25rem] h-full bg-background z-50 shadow-lg p-5 overflow-y-scroll`}
       >
         <Title className="text-center">Your Cart</Title>
+        <div className="absolute top-4 right-4">
+          <Button
+            onClick={() => setIsCartOpen(false)}
+            colour="background"
+            icon={<img alt="Close" src="/images/icons/close.svg" />}
+            circle
+          />
+        </div>
 
         <ul aria-label="Cart Items">
           {cartData.length ? (
             cartData.map((cartItem) => (
               <li
-                key={`cartItem-${cartItem.product.productID}`}
+                key={`cartItem-${cartItem.product.itemID}`}
                 aria-label="Cart Item"
                 className="mb-6"
               >

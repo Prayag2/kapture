@@ -12,7 +12,7 @@ const CartCard = ({ product, quantity }) => {
     <div
       onClick={() => {
         setIsCartOpen(false);
-        navigate(`/product/${product.productID}`);
+        navigate(`/product/${product.itemID}`);
       }}
       className="cursor-pointer w-full text-left h-28 flex gap-5 items-start"
     >
@@ -38,14 +38,14 @@ const CartCard = ({ product, quantity }) => {
             className="w-full"
             defaultValue={quantity}
             onChange={(el) =>
-              updateCartItemQuantity(product.productID, el.value)
+              updateCartItemQuantity(product.itemID, el.value)
             }
             options={Array.from(Array(product.quantity + 1).keys())
               .slice(1)
               .map((x) => `${x}`)}
           />
           <Button
-            onClick={() => deleteFromCart(product.productID)}
+            onClick={() => deleteFromCart(product.itemID)}
             icon={
               <img
                 className="invert"

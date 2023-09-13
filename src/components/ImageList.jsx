@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "/src/components/Image";
 
 const ImageList = ({
   media,
@@ -25,10 +26,9 @@ const ImageList = ({
             className={`aspect-square overflow-hidden w-full max-w-[3rem] rounded ${
               currentIndex === index &&
               "ring-2 ring-accent border-2 border-background"
-            }`}
-          >
-            <img
-              className={`w-full h-full object-contain bg-white ${
+            }`}>
+            <Image
+              imageClassName={`object-contain bg-white ${
                 medium.type === "video" && "p-2"
               }`}
               src={medium.isVideo ? "/images/icons/play.svg" : medium.url}

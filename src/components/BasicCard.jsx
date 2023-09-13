@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import Image from "/src/components/Image";
 import Button from "/src/components/Button";
+import { useNavigate } from "react-router-dom";
 
 const BasicCard = ({ image, buttonText, to, icon }) => {
   const navigate = useNavigate();
@@ -8,10 +8,9 @@ const BasicCard = ({ image, buttonText, to, icon }) => {
   return (
     <div
       onClick={() => navigate(to)}
-      className="aspect-square w-72 rounded-md overflow-hidden relative group cursor-pointer"
-    >
-      <img
-        className="object-cover w-full h-full transition-[transform] group-hover:scale-110"
+      className="aspect-square w-72 rounded-md overflow-hidden relative group cursor-pointer">
+      <Image
+        imageClassName="object-cover transition-[transform] group-hover:scale-110"
         alt=""
         src={image}
       />
