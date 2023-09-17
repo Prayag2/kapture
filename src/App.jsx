@@ -22,12 +22,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product/*" element={<ProductRoutes />} />
-          <Route path="/dashboard/*" element={<AdminRoutes />} />
           <Route path="/search/" element={<Search />} />
           <Route path="/category/:categoryID" element={<Search />} />
           <Route
-            element={<ProtectedRoute condition={isAdmin} redirect="/login" />}>
-            <Route path="/dashboard" element={<AdminDashboard />}></Route>
+            element={<ProtectedRoute condition={isAdmin} redirect="/404" />}>
+            <Route path="/dashboard/*" element={<AdminRoutes />}></Route>
           </Route>
           <Route
             element={<ProtectedRoute condition={!currentUser} redirect="/" />}>

@@ -30,23 +30,14 @@ const Search = () => {
   }, []);
   useEffect(() => inputEl.current.focus(), []);
 
-  const handleSearch = (query) => {};
-
   const handleChange = (e) => {
     e.preventDefault();
     let formData = new FormData(formEl.current);
     let searchTerm = formData.get("query");
 
-    setLoading(true);
-    setTimeout(() => {
-      formData = new FormData(formEl.current);
-      if (searchTerm === formData.get("query")) {
-        searchProduct(formData.get("query")).then((data) => {
-          setProductList(data);
-          setLoading(false);
-        });
-      }
-    }, 1000);
+    searchProduct(formData.get("query")).then((data) => {
+      setProductList(data);
+    });
   };
 
   return (

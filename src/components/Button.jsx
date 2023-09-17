@@ -9,12 +9,13 @@ function Button({
   to,
   className,
   badgeText,
+  disabled
 }) {
   const colours = {
-    primary: "bg-primary text-background hover:bg-primary-dark",
-    secondary: "bg-secondary text-primary hover:bg-secondary-dark",
-    background: "bg-background text-primary hover:bg-background-dark",
-    accent: "bg-accent text-background hover:bg-accent-dark",
+    primary: `text-background bg-primary${disabled ? "-light " : " hover:bg-primary-dark"}`,
+    secondary: `text-primary bg-secondary${disabled ? "-light " : " hover:bg-secondary-dark"}`,
+    background: `text-primary bg-background${disabled ? "-light " : " hover:bg-background-dark"}`,
+    accent: `text-background bg-accent${disabled ? "-light" : " hover:bg-accent-dark"}`,
   };
   const navigate = useNavigate();
   const handleClick = (e) => {
@@ -30,6 +31,7 @@ function Button({
       } ${
         colours[colour]
       } flex items-center justify-center gap-2 ${className} relative`}
+      disabled={disabled}
     >
       {icon ? <span className="h-full py-2 [&>*]:h-full">{icon}</span> : null}
       {badgeText ? (
@@ -46,6 +48,7 @@ Button.defaultProps = {
   colour: "primary",
   circle: false,
   onClick: () => {},
+  disabled: false
 };
 
 export default Button;

@@ -35,21 +35,23 @@ const Nav = ({ navLinks, className, navOpen, toggleNav }) => {
   return (
     <>
       <nav className="lg:flex gap-8 hidden">{navLinksRegular}</nav>
+      {navOpen && (
+        <div
+          aria-label="cart backdrop"
+          onClick={() => toggleNav()}
+          className="fixed top-0 left-0 w-full h-full bg-primary z-40 opacity-25"
+        ></div>
+      )}
       <nav
         onClick={toggleNav}
-        className={`fixed top-0 w-full h-[100vh] bg-secondary transition-[left] ${
+        className={`fixed top-0 w-full max-w-[30rem] h-[100vh] bg-background shadow-md transition-[left] ${
           navOpen ? "left-0" : "left-[-100%]"
         } z-50 text-lg py-5`}
       >
         <Wrapper className="space-y-5">
           <div className="flex justify-between items-center">
             <Logo full />
-            <img
-              alt="⨯"
-              className="h-8"
-              alt="Close icon"
-              src="/images/icons/close.svg"
-            />
+	    <Button onClick={toggleNav} colour="background" icon={ <img alt="⨯" src="/images/icons/close.svg"/> } circle />
           </div>
           <div className="space-y-3">{navLinksTouch}</div>
           <div className="flex gap-4">

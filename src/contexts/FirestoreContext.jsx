@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext, createContext } from "react";
-import { useLocalStorage } from "/src/hooks/LocalStorage";
 import { db } from "/src/firebase.jsx";
 import {
   collection,
@@ -7,6 +6,7 @@ import {
   or,
   orderBy,
   getDoc,
+  updateDoc,
   getDocs,
   addDoc,
   query,
@@ -21,12 +21,8 @@ export const useFirestore = () => useContext(firestoreContext);
 
 const FirestoreContextProvider = ({ children }) => {
   const [categoryData, setCategoryData] = useState([]);
-  const [localProductData, setLocalProductData, removeLocalProductData] =
-    useLocalStorage("products", []);
-  const [productData, setProductData] = useState(localProductData);
-  const [allProductsLoaded, setAllProductsLoaded] = useState(
-    localProductData ? localProductData : false,
-  );
+  const [productData, setProductData] = useState([]);
+  const [allProductsLoaded, setAllProductsLoaded] = useState(false);
 
   useEffect(() => {
     if (!categoryData.length) {
@@ -42,7 +38,7 @@ const FirestoreContextProvider = ({ children }) => {
     response.forEach((item) => {
       data.push({ itemID: item.id, ...item.data() });
     });
-    console.log("Fetched", data)
+    console.log("Fetched", data);
     return data;
   };
 
@@ -55,7 +51,6 @@ const FirestoreContextProvider = ({ children }) => {
       if (!productLoaded(item.itemID)) {
         setProductData((prev) => {
           const updatedData = [...prev, item];
-          setLocalProductData(updatedData);
           return updatedData;
         });
       }
@@ -79,10 +74,26 @@ const FirestoreContextProvider = ({ children }) => {
     if (allProductsLoaded) {
       data = productData;
     } else {
-      data = await fetchData(query(collection(db, "product"), orderBy("name")));
+      if (productData.length > 0) {
+        data = await fetchData(
+          query(
+            collection(db, "product"),
+            orderBy("__name__"),
+            where(
+              "__name__",
+              "not-in",
+              productData.map((item) => item.itemID),
+            ),
+          ),
+        );
+        data = [...data, ...productData];
+      } else {
+        data = await fetchData(
+          query(collection(db, "product"), orderBy("name")),
+        );
+      }
       setAllProductsLoaded(true);
-      setProductData(data);
-      setLocalProductData(data);
+      updateProductData(data);
     }
     return data;
   };
@@ -105,14 +116,25 @@ const FirestoreContextProvider = ({ children }) => {
   };
 
   const getProductVariations = async (mainProduct) => {
-    const variations = await fetchData(
-      query(
-        collection(db, "product"),
-        orderBy("__name__"),
-        where("__name__", "in", mainProduct.variations.products),
-      ),
-    );
-    return variations;
+    if (productData.length > 0) {
+      return await fetchData(
+        query(
+          collection(db, "product"),
+          orderBy("__name__"),
+          where("__name__", "in", mainProduct.variations.products),
+          where("enabled", "==", true),
+        ),
+      );
+    } else {
+      return await fetchData(
+        query(
+          collection(db, "product"),
+          orderBy("__name__"),
+          where("__name__", "in", mainProduct.variations.products),
+          where("enabled", "==", true),
+        ),
+      );
+    }
   };
 
   return (
@@ -125,6 +147,7 @@ const FirestoreContextProvider = ({ children }) => {
         setCategoryData,
         getProduct,
         getProductVariations,
+        getAllProducts,
         searchProduct,
         filterByCategory,
         fetchData,
@@ -136,8 +159,8 @@ const FirestoreContextProvider = ({ children }) => {
         orderBy,
         startAt,
         limit,
-      }}
-    >
+	updateDoc
+      }}>
       {children}
     </firestoreContext.Provider>
   );

@@ -37,6 +37,7 @@ const NavDropdown = ({ to, name, navLinks, touch, onClick }) => {
   ) : (
     <div
       className="relative"
+      onClick={()=>setIsOpen(prev => !prev)}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >

@@ -1,11 +1,11 @@
 import { useState, useRef } from "react";
 
 const Checkbox = ({ name, placeholder, value }) => {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(value);
   const checkboxEl = useRef();
   const toggleChecked = () => {
     setChecked((prev) => {
-      checkboxEl.current.value = !prev;
+      checkboxEl.current.checked = !prev;
       return !prev;
     });
   };
@@ -13,14 +13,15 @@ const Checkbox = ({ name, placeholder, value }) => {
   return (
     <div
       onClick={toggleChecked}
-      className="cursor-pointer inline-flex items-center gap-2"
+      className="cursor-pointer inline-flex items-center gap-2 w-full"
     >
       <input
         className="hidden"
         name={name}
-        id="check"
+        id={name}
         type="checkbox"
         ref={checkboxEl}
+	defaultValue={value}
       />
       <div
         className={`p-1 h-5 aspect-square rounded overflow-hidden ${

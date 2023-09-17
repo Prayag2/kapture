@@ -12,7 +12,6 @@ import Loading from "/src/components/Loading";
 const Home = () => {
   const [productLoading, setProductLoading] = useState(true);
   const [categoryLoading, setCategoryLoading] = useState(true);
-  const { currentUser, logout, isAdmin } = useAuth();
   const {
     fetchData,
     query,
@@ -29,7 +28,7 @@ const Home = () => {
   } = useFirestore();
 
   useEffect(() => {
-    if (productData.filter((item) => item.featured).length > 3) {
+    if (productData.filter((item) => item.featured).length >= 3) {
       setProductLoading(false);
     } else {
       fetchData(
@@ -37,6 +36,7 @@ const Home = () => {
           collection(db, "product"),
           orderBy("name"),
           where("featured", "==", true),
+	  where("enabled", "==", true),
           limit(10),
         ),
       ).then((data) => {

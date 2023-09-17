@@ -26,7 +26,7 @@ const Product = () => {
   useEffect(() => {
     getProduct(itemID)
       .then((product) => {
-        if (!product.enabled) navigate("/404");
+        if (!product.enabled) throw new Error("Inactive product");
 
         setProduct(product);
         if (product.hasOwnProperty("variations"))
@@ -71,9 +71,7 @@ const Product = () => {
                   onClick={(index) =>
                     navigate(`/product/${variations[index].itemID}`)
                   }
-                  defaultCurrentIndex={product.variations.products.indexOf(
-                    itemID,
-                  )}
+                  defaultCurrentIndex={variations.indexOf(variations.find(item => item.itemID === itemID))}
                 />
               </div>
             ) : null}
