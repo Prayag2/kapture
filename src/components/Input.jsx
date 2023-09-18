@@ -8,14 +8,14 @@ function Input({
   label,
 }) {
   return (
-    <div>
+    <div className={className}>
       {label ? (
         <label htmlFor={name} className="mr-2 capitalize block mb-2">
           {label}:
         </label>
       ) : null}
       <div
-        className={`px-3 h-9 rounded-md bg-secondary flex items-center ${className} w-full`}>
+        className={`px-3 h-9 rounded-md bg-secondary flex items-center w-full`}>
         {icon ? (
           <span className="h-full py-2 mr-2 [&>*]:h-full">{icon}</span>
         ) : null}

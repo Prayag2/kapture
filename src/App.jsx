@@ -10,6 +10,7 @@ import AdminDashboard from "/src/pages/AdminDashboard";
 import ProtectedRoute from "/src/components/ProtectedRoute";
 import ProductRoutes from "/src/routes/ProductRoutes";
 import AdminRoutes from "/src/routes/AdminRoutes";
+import DialogContextProvider from "/src/contexts/DialogContext";
 
 function App() {
   const { isAdmin, currentUser } = useAuth();
@@ -17,23 +18,27 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Header />
-        <Cart />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/product/*" element={<ProductRoutes />} />
-          <Route path="/search/" element={<Search />} />
-          <Route path="/category/:categoryID" element={<Search />} />
-          <Route
-            element={<ProtectedRoute condition={isAdmin} redirect="/404" />}>
-            <Route path="/dashboard/*" element={<AdminRoutes />}></Route>
-          </Route>
-          <Route
-            element={<ProtectedRoute condition={!currentUser} redirect="/" />}>
-            <Route path="/login" element={<Login />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <DialogContextProvider>
+          <Header />
+          <Cart />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/product/*" element={<ProductRoutes />} />
+            <Route path="/search/" element={<Search />} />
+            <Route path="/category/:categoryID" element={<Search />} />
+            <Route
+              element={<ProtectedRoute condition={isAdmin} redirect="/404" />}>
+              <Route path="/dashboard/*" element={<AdminRoutes />}></Route>
+            </Route>
+            <Route
+              element={
+                <ProtectedRoute condition={!currentUser} redirect="/" />
+              }>
+              <Route path="/login" element={<Login />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </DialogContextProvider>
       </BrowserRouter>
     </>
   );

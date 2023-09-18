@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useFirestore } from "/src/contexts/FirestoreContext";
 import Title from "/src/components/Title";
@@ -10,11 +10,13 @@ import Button from "/src/components/Button";
 import Checkbox from "/src/components/Checkbox";
 import Loading from "/src/components/Loading";
 import Hr from "/src/components/Hr";
+import { useDialog } from "/src/contexts/DialogContext";
 
 const AdminListing = () => {
-  const { getProduct, getProductVariations, productData, doc, updateDoc, db } =
+  const { getProduct, getProductVariations, productData, doc, updateDoc, db, uploadFiles } =
     useFirestore();
   const { itemID } = useParams();
+  const { showAlert, showPrompt } = useDialog();
 
   const [variations, setVariations] = useState([]);
   const [product, setProduct] = useState(null);
@@ -37,7 +39,7 @@ const AdminListing = () => {
       });
   }, [location.pathname]);
 
-  const updateListing = (e, productID) => {
+  const updateListing = useCallback((e, productID) => {
     e.preventDefault();
     let formData = new FormData(
       document.querySelector(`#listingForm-${productID}`),
@@ -54,12 +56,12 @@ const AdminListing = () => {
       mrp: mrp,
       enabled: enabled !== null,
     }).then(() => alert(`Updated successfully!`));
-  };
+  }, []);
 
   return !product ? (
     <Loading />
   ) : (
-    <section>
+    <section className="w-full">
       <Title>Manage Listing</Title>
       <div className="space-y-2">
         <Checkbox
@@ -111,54 +113,69 @@ const AdminListing = () => {
           otherProps={{ defaultValue: product.warranty }}
         />
       </div>
-      <div className="my-5 p-5 border border-accent rounded-md space-y-3 relative">
+      <div className="w-full my-5 p-5 border border-accent rounded-md space-y-3 relative">
         <p className="absolute uppercase font-bold text-lg bg-background inline-block top-[-0.75rem]">
           Specifications
         </p>
         {Object.keys(specifications).map((spec, index) => (
-          <div className="flex gap-3" key={`specification-${index}`}>
+          <div className="flex gap-3 items-end" key={`specification-${index}`}>
             <Input
-              name={spec.replaceAll(" ", "-")}
-              placeholder="Edit Name"
-              otherProps={{
-                defaultValue: spec,
-                onChange: (e) =>
-                  setSpecifications((prev) => {
-                    let objArr = Object.keys(prev).map((key) => [
-                      key,
-                      prev[key],
-                    ]);
-		    e.target.value = e.target.value.toLowerCase();
-                    objArr[index][0] = e.target.value;
-                    return Object.fromEntries(objArr);
-                  }),
-              }}
-            />
-            <Input
-              name={spec.replaceAll(" ", "-")}
+              name={spec}
+              label={spec}
               placeholder="Edit Value"
+	      className="w-full"
               otherProps={{
                 defaultValue: specifications[spec],
                 onChange: (e) => {
-		  setSpecifications(prev => {
-		    prev[spec] = e.target.value;
-		    return {...prev};
-		  })
-		},
+                  setSpecifications((prev) => {
+                    prev[spec] = e.target.value;
+                    return { ...prev };
+                  });
+                },
               }}
+            />
+            <Button
+              colour="accent"
+              className="h-9"
+              onClick={() =>
+                setSpecifications((prev) => {
+                  delete prev[spec];
+                  return { ...prev };
+                })
+              }
+              icon={
+                <img className="invert" alt="" src="/images/icons/trash.svg" />
+              }
             />
           </div>
         ))}
         <Button
-          onClick={() =>
-            setSpecifications((prev) => {
-              return { ...prev, "": "" };
-            })
-          }>
+          onClick={async () => {
+            const output = await showPrompt("Enter Specification Name");
+            if (output)
+              setSpecifications((prev) => {
+                if (!prev[output]) prev[output] = "";
+                return { ...prev };
+              });
+          }}>
           Add More
         </Button>
       </div>
-      <ImageGallery media={product.media}/>
+      <div>
+        <ImageGallery media={product.media} />
+        <Input
+          type="file"
+          className="mt-2"
+          label="Upload image or video"
+          otherProps={{
+            accept:
+              "image/png,image/jpg,image/jpeg,image/webp,video/mp4,video/mov",
+	    onChange: e => uploadFiles("test", e.target.files),
+	    multiple: true
+          }}
+          icon={<img src="/images/icons/upload.svg" />}
+        />
+      </div>
     </section>
   );
 };

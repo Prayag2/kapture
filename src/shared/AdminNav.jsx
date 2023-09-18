@@ -7,7 +7,7 @@ const AdminNav = () => {
     {name: "Listings", to: "/dashboard/listings"},
   ]
   return (
-    <aside className="w-full max-w-[15rem] bg-primary p-3 rounded-md space-y-3 shadow">
+    <aside className="w-full md:max-w-[15rem] bg-primary p-3 rounded-md space-y-3 shadow">
       {links.map((link, id)=> (
       <NavItem
 	key={`adminNavLink-${id}`}

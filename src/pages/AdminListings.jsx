@@ -43,10 +43,10 @@ const AdminListings = () => {
     const mrp = formData.get("mrp");
 
     updateDoc(doc(db, "product", productID), {
-      quantity: quantity,
-      price: price,
-      mrp: mrp,
-      enabled: enabled !== null
+      quantity: parseInt(quantity),
+      price: parseInt(price),
+      mrp: parseInt(mrp),
+      enabled: enabled !== null,
     }).then(() => alert(`Updated successfully!`));
   };
 

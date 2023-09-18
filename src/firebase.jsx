@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 import {
   getFirestore,
   initializeFirestore,
@@ -21,7 +22,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 export const db = getFirestore(app);
-export const auth = getAuth();
+export const storage = getStorage(app);
+export const auth = getAuth(app);
 
 // Emulator Settings
 //connectFirestoreEmulator(db, "127.0.0.1", 8080);

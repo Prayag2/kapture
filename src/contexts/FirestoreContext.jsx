@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from "react";
-import { db } from "/src/firebase.jsx";
+import { db, storage } from "/src/firebase.jsx";
 import {
   collection,
   doc,
@@ -14,6 +14,7 @@ import {
   startAt,
   limit,
 } from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import Loading from "/src/components/Loading";
 
 const firestoreContext = createContext();
@@ -137,6 +138,26 @@ const FirestoreContextProvider = ({ children }) => {
     }
   };
 
+  const uploadFiles = async (directory, files) => {
+    let fileLinks = [];
+    // await files.forEach(async (file) => {
+    //   console.log("Uploading", file.name);
+    let file = files[0]
+    try {
+      const fileSnapshot = await uploadBytes(
+        ref(storage, `${directory}/${file.name}`),
+        file,
+      );
+      const fileURL = await getDownloadURL(fileSnapshot.ref);
+      console.log("Uploaded", file.name, ":", fileURL);
+      fileLinks.push(fileURL);
+    } catch (err) {
+      alert(err);
+    }
+    // });
+    return fileLinks;
+  };
+
   return (
     <firestoreContext.Provider
       value={{
@@ -159,7 +180,8 @@ const FirestoreContextProvider = ({ children }) => {
         orderBy,
         startAt,
         limit,
-	updateDoc
+        updateDoc,
+        uploadFiles,
       }}>
       {children}
     </firestoreContext.Provider>

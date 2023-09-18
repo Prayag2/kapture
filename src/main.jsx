@@ -8,12 +8,12 @@ import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
-    <AuthContextProvider>
-      <FirestoreContextProvider>
-        <CartContextProvider>
+  <AuthContextProvider>
+    <FirestoreContextProvider>
+      <CartContextProvider>
           <App />
-        </CartContextProvider>
-      </FirestoreContextProvider>
-    </AuthContextProvider>
+      </CartContextProvider>
+    </FirestoreContextProvider>
+  </AuthContextProvider>,
   // </React.StrictMode>,
 );
