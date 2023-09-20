@@ -47,13 +47,21 @@ const DialogContextProvider = ({ children }) => {
   return (
     <dialogContext.Provider value={{ showAlert, showPrompt }}>
       {dialogOpen && (
-        <div className="w-full h-[100vh] fixed top-0 left-0 bg-secondary/75 backdrop-blur z-50 flex justify-center items-center">
+        <div
+          onClick={(e) => {
+            requiresInput
+              ? hidePrompt.resolvePrompt(null)
+              : setDialogOpen(false);
+          }}
+          className="w-full h-[100vh] fixed top-0 left-0 bg-secondary/75 backdrop-blur z-50 flex justify-center items-center">
           <dialog
+	    onClick={e => e.stopPropagation()}
             open={dialogOpen}
-            className="shadow-md p-5 rounded-md text-lg">
-            {text}
+            className="shadow-md p-5 rounded-md text-lg max-w-[30rem] text-center">
+            <span className="mb-5 block">{text}</span>
             {requiresInput && (
               <form
+                className="mb-3"
                 onSubmit={(e) =>
                   hidePrompt.resolvePrompt(inputEl.current.value)
                 }>
@@ -66,18 +74,20 @@ const DialogContextProvider = ({ children }) => {
                 />
               </form>
             )}
-            <Button
-              className="w-full my-3"
-              onClick={(e) =>
-                requiresInput
-                  ? hidePrompt.resolvePrompt(null)
-                  : setDialogOpen(false)
-              }>
-              Cancel
-            </Button>
+            {requiresInput && (
+              <Button
+                className="w-full mb-3"
+                onClick={(e) => hidePrompt.resolvePrompt(null)}>
+                Cancel
+              </Button>
+            )}
             <Button
               className="w-full"
-              onClick={(e) => hidePrompt.resolvePrompt(inputEl.current.value)}>
+              onClick={(e) =>
+                requiresInput
+                  ? hidePrompt.resolvePrompt(inputEl.current.value)
+                  : setDialogOpen(false)
+              }>
               Okay
             </Button>
           </dialog>

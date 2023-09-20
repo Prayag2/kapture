@@ -1,19 +1,24 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import ImageList from "/src/components/ImageList";
 import Image from "/src/components/Image";
+import Button from "/src/components/Button";
 
-const ImageGallery = ({ media }) => {
+const ImageGallery = ({ media, actionButton, onActionButtonClick }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const currentMedium = useMemo(
-    () => media[currentIndex],
-    [media, currentIndex],
-  );
+  const currentMedium = useMemo(() => {
+    let cM = media[
+      currentIndex > media.length - 1 ? media.length - 1 : currentIndex
+    ];
+    console.log("CURRENT MEDIUM", cM)
+    return cM;
+  }, [media, currentIndex]);
   const imageWrapper = useRef();
   const mainImage = useRef();
   let zoomEnabled = false;
 
   useEffect(() => {
-    currentMedium.type === "image" && zoomOutImage();
+    if(currentMedium)
+      currentMedium.type === "image" && zoomOutImage();
   }, [currentIndex]);
 
   const toggleZoom = (e) => (zoomEnabled ? zoomOutImage() : zoomInImage(e));
@@ -45,14 +50,15 @@ const ImageGallery = ({ media }) => {
     mainImage.current.style.transform = `translateX(${xOffset}px) translateY(${yOffset}px)`;
   }
 
-  return (
+  return media.length === 0 ? (
+    <p>No Media Found</p>
+  ) : (
     <div className="w-full max-w-[30rem] ">
       {currentMedium.isVideo ? (
         <video
           preload="metadata"
           className="w-full bg-white rounded-md aspect-square"
-          controls
-        >
+          controls>
           <source src={`${currentMedium.url}#t=0.1`} type="video/mp4" />
         </video>
       ) : (
@@ -60,9 +66,8 @@ const ImageGallery = ({ media }) => {
           ref={imageWrapper}
           onClick={toggleZoom}
           onMouseMove={handleZoom}
-	  onMouseLeave={zoomOutImage}
-          className={`w-full overflow-hidden rounded-md aspect-square bg-white cursor-zoom-in`}
-        >
+          onMouseLeave={zoomOutImage}
+          className={`w-full overflow-hidden rounded-md aspect-square bg-white cursor-zoom-in`}>
           <Image
             ref={mainImage}
             src={currentMedium.url}
@@ -70,6 +75,13 @@ const ImageGallery = ({ media }) => {
             imageClassName="w-full h-full object-contain transition-all duration-200 ease-out"
           />
         </div>
+      )}
+      {actionButton && (
+        <Button
+          className="mt-3"
+          onClick={(e) => onActionButtonClick(e, currentIndex)}>
+          {actionButton}
+        </Button>
       )}
       <ImageList
         media={media}

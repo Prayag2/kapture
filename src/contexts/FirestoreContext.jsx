@@ -14,7 +14,7 @@ import {
   startAt,
   limit,
 } from "firebase/firestore";
-import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
 import Loading from "/src/components/Loading";
 
 const firestoreContext = createContext();
@@ -140,27 +140,27 @@ const FirestoreContextProvider = ({ children }) => {
 
   const uploadFiles = async (directory, files) => {
     let fileLinks = [];
-    // await files.forEach(async (file) => {
-    //   console.log("Uploading", file.name);
-    let file = files[0]
-    try {
-      const fileSnapshot = await uploadBytes(
-        ref(storage, `${directory}/${file.name}`),
-        file,
-      );
-      const fileURL = await getDownloadURL(fileSnapshot.ref);
-      console.log("Uploaded", file.name, ":", fileURL);
-      fileLinks.push(fileURL);
-    } catch (err) {
-      alert(err);
-    }
-    // });
+    for (const file of files) {
+      console.log("Uploading", file.name);
+      try {
+        const fileSnapshot = await uploadBytes(
+          ref(storage, `${directory}/${file.name}`),
+          file,
+        );
+        const fileURL = await getDownloadURL(fileSnapshot.ref);
+        console.log("Uploaded", file.name, ":", fileURL);
+        fileLinks.push(fileURL);
+      } catch (err) {
+        alert(err);
+      }
+    };
     return fileLinks;
   };
 
   return (
     <firestoreContext.Provider
       value={{
+	deleteObject,
         productData,
         setProductData,
         updateProductData,
@@ -182,6 +182,8 @@ const FirestoreContextProvider = ({ children }) => {
         limit,
         updateDoc,
         uploadFiles,
+	storage,
+	ref
       }}>
       {children}
     </firestoreContext.Provider>
