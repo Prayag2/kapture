@@ -1,0 +1,134 @@
+import React, { useState, useEffect } from "react";
+import Wrapper from "/src/components/Wrapper";
+import Title from "/src/components/Title";
+import Input from "/src/components/Input";
+import Select from "/src/components/Select";
+import Button from "/src/components/Button";
+import Hr from "/src/components/Hr";
+import FormRow from "/src/components/FormRow";
+import FormCol from "/src/components/FormCol";
+import MiniProductCard from "/src/components/MiniProductCard";
+import { useDialog } from "/src/contexts/DialogContext";
+
+const Checkout = () => {
+  const { showAlert } = useDialog();
+
+  const [tabs, setTabs] = useState([
+    {
+      name: "Contact Information",
+      stepCompleted: false,
+      jsx: (
+        <FormCol className="text-left">
+          <Input name="name" label="Full Name" placeholder="" />
+          <Input
+            name="email"
+            label="Email Address"
+            placeholder="user@mail.com"
+            type="email"
+          />
+          <FormRow>
+            <Input
+              name="mobile"
+              label="Mobile Number"
+              placeholder="+91XXXXXXXXXX"
+              type="tel"
+            />
+            <Button onClick={() => handleCompleteStep(0)}>Verify Now</Button>
+          </FormRow>
+          <Input name="otp" label="Enter OTP" placeholder="XXXXXX" />
+        </FormCol>
+      ),
+    },
+    {
+      name: "Shipping Details",
+      stepCompleted: true,
+      jsx: (
+        <FormCol className="text-left">
+          <Input
+            name="flat"
+            label="Flat, House No., Building, Company, Apartment"
+          />
+          <Input name="area" label="Area, Street, Sector, Village" />
+          <Input name="landmark" label="Landmark" />
+          <FormRow>
+            <Input name="town" label="Town/City" />
+            <Select placeholder="State" options={["Delhi", "Mumbai"]} colour="secondary" label="State" />
+          </FormRow>
+        </FormCol>
+      ),
+    },
+    {
+      name: "Payment Gateway",
+      stepCompleted: false,
+      jsx: <h1>Contact!</h1>,
+    },
+  ]);
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const handleShowStep = (i) => {
+    if (i === 0 || tabs[i - 1].stepCompleted) {
+      setCurrentTab(i);
+    } else {
+      showAlert(`Complete ${tabs[i - 1].name} first!`);
+    }
+  };
+
+  const handleCompleteStep = (stepIndex) => {
+    const prevTabs = [...tabs];
+    prevTabs[stepIndex].stepCompleted = true;
+    setTabs(prevTabs);
+  };
+
+  return (
+    <Wrapper className="text-center">
+      <Title>Checkout</Title>
+      <div className="flex gap-8 justify-center w-full mb-8">
+        {tabs.map((tab, i) => (
+          <p
+	    key={`tab-${i}`}
+            className={`${currentTab == i ? "text-accent" : "text-primary"} ${
+              !tab.stepCompleted && currentTab < i ? "opacity-50" : ""
+            } cursor-pointer`}
+            onClick={() => handleShowStep(i)}>
+            {tab.name}
+          </p>
+        ))}
+      </div>
+      <div className="w-full flex flex-col lg:flex-row gap-10 p-5">
+        <div className="w-full h-full rounded-md w-full">
+          {tabs.map((tab, i) => {
+	    if (i !== currentTab) return;
+	    return (
+	      <React.Fragment key={`tabSection-${i}`}>
+		{tab.jsx}
+	      </React.Fragment>
+	    )
+	  })}
+        </div>
+        <div
+          aria-label="order summary"
+          className="w-full max-w-[25rem] bg-secondary h-full p-5 rounded-md">
+          <Title>Order Summary</Title>
+          <Hr compact />
+          <MiniProductCard className="w-full" />
+          <Hr compact />
+          <div className="w-full flex justify-between px-4 text-lg">
+            <p>Items</p>
+            <p className="text-primary">Rs 500</p>
+          </div>
+          <div className="w-full flex justify-between px-4 text-lg">
+            <p>Delivery</p>
+            <p className="text-primary">Rs 500</p>
+          </div>
+          <Button
+            className="w-full mt-5"
+            onClick={() => handleShowStep(currentTab + 1)}>
+            Proceed to Next Step
+          </Button>
+        </div>
+      </div>
+    </Wrapper>
+  );
+};
+
+export default Checkout;
