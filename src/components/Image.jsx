@@ -17,7 +17,7 @@ const Image = forwardRef(({ alt, src, className, imageClassName }, ref) => {
           className={`${imageClassName} w-full h-full`}
           onLoad={() => setLoading(false)}
           alt={alt}
-          src={src}
+          src={src ? src : "/images/placeholder.svg"}
           loading="lazy"
         />
       </div>

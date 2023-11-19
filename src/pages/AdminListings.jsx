@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFirestore } from "/src/contexts/FirestoreContext";
 import Title from "/src/components/Title";
 import Image from "/src/components/Image";
@@ -10,14 +10,24 @@ import Hr from "/src/components/Hr";
 import AdminProductCard from "/src/components/AdminProductCard";
 
 const AdminListings = () => {
-  const { productData, getAllProducts, searchProduct, doc, updateDoc, db } =
-    useFirestore();
+  const {
+    productData,
+    getAllProducts,
+    searchProduct,
+    doc,
+    updateDoc,
+    db,
+    addDoc,
+    collection,
+  } = useFirestore();
+  const navigate = useNavigate();
   const searchEl = useRef();
   const searchFormEl = useRef();
   const [productList, setProductList] = useState([]);
 
   useEffect(() => {
-    searchProduct().then((data) => {
+    searchProduct("", true).then((data) => {
+      console.log("[AdminListings] productList", data);
       setProductList(data);
     });
   }, []);
@@ -47,13 +57,25 @@ const AdminListings = () => {
       quantity: parseInt(quantity),
       price: parseInt(price),
       mrp: parseInt(mrp),
-      enabled: enabled !== null,
+      enabled: enabled === "on",
     }).then(() => alert(`Updated successfully!`));
+  };
+  const handleNewListing = async () => {
+    const docRef = await addDoc(collection(db, "product"), {
+      tags: [],
+      specifications: {},
+      media: [],
+      variations: {},
+    });
+    navigate(`/dashboard/listing/${docRef.id}`);
   };
 
   return (
     <section>
       <Title>Manage Listings</Title>
+      <Button className="mb-4" onClick={handleNewListing}>
+        Create New Listing
+      </Button>
       <form ref={searchFormEl} className="mb-5">
         <Input
           type="search"
@@ -64,11 +86,15 @@ const AdminListings = () => {
         />
       </form>
       <ul>
-        {productList.map((product) => (
-          <Fragment key={product.itemID}>
-            <AdminProductCard product={product} updateListing={updateListing} />
-          </Fragment>
-        ))}
+        {productList &&
+          productList.map((product) => (
+            <Fragment key={product.itemID}>
+              <AdminProductCard
+                product={product}
+                updateListing={updateListing}
+              />
+            </Fragment>
+          ))}
       </ul>
     </section>
   );

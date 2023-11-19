@@ -6,6 +6,11 @@ export const useCart = () => useContext(cartContext);
 
 const CartContextProvider = ({ children }) => {
   const [cartData, setCartData] = useState([]);
+
+  // singleProduct was created for the "Buy Now" button so that, if the user has
+  // some items in the cart but still clicks "Buy Now" on a product, the user can
+  // buy only that product without disturbing the cart
+  const [singleProduct, setSingleProduct] = useState(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [localCart, setLocalCart, removeLocalCart] = useLocalStorage(
     "cart",
@@ -34,7 +39,6 @@ const CartContextProvider = ({ children }) => {
       setLocalCart(updatedCart);
       return updatedCart;
     });
-    setIsCartOpen(true);
   };
 
   const updateCartItemQuantity = (itemID, newQuantity) => {
@@ -49,7 +53,9 @@ const CartContextProvider = ({ children }) => {
     });
   };
 
-  const isCartEmpty = () => cartData.length === 0;
+  const isCartEmpty = () => {
+    return localCart.length === 0
+  };
 
   const deleteFromCart = (itemID) => {
     setCartData((prev) => {
@@ -71,6 +77,8 @@ const CartContextProvider = ({ children }) => {
         isCartEmpty,
         cartQuantity,
         isProductInCart,
+	singleProduct,
+	setSingleProduct
       }}
     >
       {children}

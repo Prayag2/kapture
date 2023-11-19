@@ -5,9 +5,10 @@ const AdminNav = () => {
     {name: "Summary", to: "/dashboard"},
     {name: "Orders", to: "/dashboard/orders"},
     {name: "Listings", to: "/dashboard/listings"},
+    {name: "Categories", to: "/dashboard/categories"},
   ]
   return (
-    <aside className="w-full md:max-w-[15rem] bg-primary p-3 rounded-md space-y-3 shadow">
+    <aside className="w-full md:max-w-[15rem] md:sticky md:top-[10vh] md:h-[70vh] bg-primary p-3 rounded-md space-y-3 shadow">
       {links.map((link, id)=> (
       <NavItem
 	key={`adminNavLink-${id}`}

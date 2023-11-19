@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import AdminDashboard from "/src/pages/AdminDashboard";
 import AdminListings from "/src/pages/AdminListings";
+import AdminCategories from "/src/pages/AdminCategories";
 import AdminListing from "/src/pages/AdminListing";
 import AdminOrders from "/src/pages/AdminOrders";
 import AdminNav from "/src/shared/AdminNav";
@@ -13,6 +14,8 @@ const AdminRoutes = () => {
       <Routes>
         <Route path="" element={<AdminDashboard />} />
         <Route path="listings" element={<AdminListings />} />
+        <Route path="categories" element={<AdminCategories />} />
+        <Route path="listing/new" element={<AdminListing newProduct />} />
         <Route path="listing/:itemID" element={<AdminListing />} />
         <Route path="orders" element={<AdminOrders />} />
       </Routes>

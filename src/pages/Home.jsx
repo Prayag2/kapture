@@ -8,10 +8,12 @@ import Section from "/src/shared/Section";
 import BasicCard from "/src/components/BasicCard";
 import ProductCard from "/src/components/ProductCard";
 import Loading from "/src/components/Loading";
+import Hr from "/src/components/Hr";
 
 const Home = () => {
   const [productLoading, setProductLoading] = useState(true);
   const [categoryLoading, setCategoryLoading] = useState(true);
+  const [gallerySlides, setGallerySlides] = useState([]);
   const {
     fetchData,
     query,
@@ -36,7 +38,7 @@ const Home = () => {
           collection(db, "product"),
           orderBy("name"),
           where("featured", "==", true),
-	  where("enabled", "==", true),
+          where("enabled", "==", true),
           limit(10),
         ),
       ).then((data) => {
@@ -44,17 +46,23 @@ const Home = () => {
         setProductLoading(false);
       });
     }
+
+    fetchData(query(collection(db, "gallery"))).then((data) => {
+      setGallerySlides(data);
+      console.log(data);
+    });
   }, []);
 
-  useEffect(()=>{
-    if(categoryData.length) {
+  useEffect(() => {
+    if (categoryData.length) {
       setCategoryLoading(false);
     }
-  }, [categoryData])
+  }, [categoryData]);
 
   return (
     <Wrapper className="my-4">
-      <Carousel images={["/images/gallery/1.jpg", "/images/gallery/1.jpg"]} />
+      {gallerySlides.length > 0 && <Carousel slides={gallerySlides} />}
+      <Hr mt mb/>
       <Section title="Shop By Categories" center>
         <div className="flex gap-5 flex-wrap justify-center">
           {categoryLoading ? (
@@ -83,6 +91,7 @@ const Home = () => {
           )}
         </div>
       </Section>
+      <Hr mt mb/>
     </Wrapper>
   );
 };

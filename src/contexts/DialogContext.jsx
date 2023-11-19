@@ -27,6 +27,15 @@ const DialogContextProvider = ({ children }) => {
     setDialogOpen(true);
     setRequiresInput(false);
     setText(alertText);
+    return new Promise((resolve) => {
+      const resolvePrompt = () => {
+        setDialogOpen(false);
+        setText("");
+        setHidePrompt({});
+        resolve();
+      };
+      setHidePrompt({ resolvePrompt });
+    });
   }, []);
 
   const showPrompt = useCallback((promptText) => {
@@ -55,7 +64,7 @@ const DialogContextProvider = ({ children }) => {
           }}
           className="w-full h-[100vh] fixed top-0 left-0 bg-secondary/75 backdrop-blur z-50 flex justify-center items-center">
           <dialog
-	    onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             open={dialogOpen}
             className="shadow-md p-5 rounded-md text-lg max-w-[30rem] text-center">
             <span className="mb-5 block">{text}</span>
@@ -86,7 +95,7 @@ const DialogContextProvider = ({ children }) => {
               onClick={(e) =>
                 requiresInput
                   ? hidePrompt.resolvePrompt(inputEl.current.value)
-                  : setDialogOpen(false)
+                  : hidePrompt.resolvePrompt()
               }>
               Okay
             </Button>

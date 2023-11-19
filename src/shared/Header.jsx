@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "/src/contexts/CartContext";
 import { useFirestore } from "/src/contexts/FirestoreContext";
+import {useAuth} from "/src/contexts/AuthContext";
 
 const Header = () => {
   const [navOpen, setNavOpen] = useState(false);
@@ -16,6 +17,7 @@ const Header = () => {
 
   const { setIsCartOpen, cartQuantity } = useCart();
   const { categoryData } = useFirestore();
+  const { isAdmin } = useAuth();
 
   const navLinks = [
     {
@@ -33,8 +35,7 @@ const Header = () => {
           to: `/category/${item.itemID}`,
         };
       }),
-    },
-    {
+    }, {
       name: "Support",
       type: "link",
       to: "/support",
@@ -71,6 +72,15 @@ const Header = () => {
                 circle
               ></Button>
             </div>
+	    {
+	      isAdmin &&
+              <Button
+		to="/dashboard"
+                colour="background"
+                icon={<img alt="" src="/images/icons/settings.svg" />}
+                circle
+              ></Button>
+	    }
           </div>
         </Wrapper>
       </header>

@@ -8,11 +8,11 @@ const AdminProductCard = ({ product, updateListing }) => {
   return (
     <li className="block mb-5 last-of-type:mb-0 flex flex-col lg:flex-row gap-5 items-center">
       <div className="w-full max-w-[20rem] lg:w-40 aspect-square rounded overflow-hidden shrink-0">
-        <Image
-          imageClassName="object-cover"
-          alt=""
-          src={product.media[0].url}
-        />
+          <Image
+            imageClassName="object-cover"
+            alt=""
+            src={product.media[0] ? product.media[0].url : ""}
+          />
       </div>
       <div>
         <Link

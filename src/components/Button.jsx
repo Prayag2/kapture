@@ -20,13 +20,13 @@ function Button({
   const navigate = useNavigate();
   const handleClick = (e) => {
     e.stopPropagation();
+    if (onClick) onClick();
     if (to) navigate(to);
-    else onClick();
   };
   return (
     <button
       onClick={handleClick}
-      className={`px-2 h-10 min-w-[2.5rem] ${
+      className={`px-2 h-9 min-w-[2.5rem] ${
         circle ? "rounded-full" : "rounded-md"
       } ${
         colours[colour]

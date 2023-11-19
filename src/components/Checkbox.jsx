@@ -21,7 +21,7 @@ const Checkbox = ({ name, placeholder, value }) => {
         id={name}
         type="checkbox"
         ref={checkboxEl}
-	defaultValue={value}
+	defaultChecked={value}
       />
       <div
         className={`p-1 h-5 aspect-square rounded overflow-hidden ${

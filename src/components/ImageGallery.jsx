@@ -9,7 +9,6 @@ const ImageGallery = ({ media, actionButton, onActionButtonClick }) => {
     let cM = media[
       currentIndex > media.length - 1 ? media.length - 1 : currentIndex
     ];
-    console.log("CURRENT MEDIUM", cM)
     return cM;
   }, [media, currentIndex]);
   const imageWrapper = useRef();

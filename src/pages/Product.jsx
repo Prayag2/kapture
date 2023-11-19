@@ -14,7 +14,7 @@ import Wrapper from "/src/components/Wrapper";
 
 const Product = () => {
   const { itemID } = useParams();
-  const { isProductInCart, addToCart, setIsCartOpen } = useCart();
+  const { isProductInCart, addToCart, setIsCartOpen, setSingleProduct } = useCart();
   const { getProduct, getProductVariations } = useFirestore();
 
   const [variations, setVariations] = useState([]);
@@ -29,7 +29,7 @@ const Product = () => {
         if (!product.enabled) throw new Error("Inactive product");
 
         setProduct(product);
-        if (product.hasOwnProperty("variations"))
+        if (product.variations.name)
           getProductVariations(product).then((data) => setVariations(data));
       })
       .catch(() => navigate("/404"));
@@ -39,7 +39,7 @@ const Product = () => {
     <Loading fullScreen />
   ) : (
     <Wrapper className="my-4">
-      <Hr mt={false} />
+      <Hr />
       <section
         aria-label="Product Section"
         className="grid grid-cols-1 md:grid-cols-2 mb-5 max-w-[65rem] mx-auto gap-5 justify-items-center md:justify-items-stretch">
@@ -52,7 +52,7 @@ const Product = () => {
             <span
               className="font-normal text-accent mr-3 text-xl md:text-2xl"
               aria-label="discount">
-              -{Math.floor(100 - (product.price / product.mrp) * 100)}%
+              {Math.floor(100 - (product.price / product.mrp) * 100) * -1}%
             </span>
             <span className="text-2xl md:text-3xl">₹{product.price}</span>
           </p>
@@ -60,18 +60,19 @@ const Product = () => {
             MRP: <span className="line-through">₹{product.mrp}</span>
           </p>
           <div className="w-full space-y-2">
-            {product.hasOwnProperty("variations") ? (
+            {variations.length > 0 ? (
               <div>
                 <p className="text-lg capitalize">
                   {product.variations.name}: {product.variationName}
                 </p>
                 <ImageList
-                  key={itemID}
                   media={variations.map((v) => v.media[0])}
                   onClick={(index) =>
                     navigate(`/product/${variations[index].itemID}`)
                   }
-                  defaultCurrentIndex={variations.indexOf(variations.find(item => item.itemID === itemID))}
+                  defaultCurrentIndex={variations.indexOf(
+                    variations.find((item) => item.itemID === itemID),
+                  )}
                 />
               </div>
             ) : null}
@@ -85,17 +86,22 @@ const Product = () => {
                 .slice(1)
                 .map((x) => `${x}`)}
             />
-            <Button colour="secondary" className="w-full">
+            <Button
+              colour="secondary"
+              className="w-full"
+              onClick={() => {
+		setSingleProduct({quantity: quantityEl.current.value, product})
+                navigate("/checkout");
+              }}>
               Buy Now
             </Button>
             <Button
               colour="accent"
               className="w-full"
-              onClick={() =>
-                isProductInCart(itemID)
-                  ? setIsCartOpen(true)
-                  : addToCart(product, quantityEl.current.value)
-              }
+              onClick={() => {
+		addToCart(product, quantityEl.current.value);
+                setIsCartOpen(true);
+              }}
               icon={
                 <img
                   src={`/images/icons/${

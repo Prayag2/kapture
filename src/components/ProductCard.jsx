@@ -19,7 +19,7 @@ const ProductCard = ({ product, badgeText, horizontal, className }) => {
         } aspect-square rounded-md overflow-hidden mb-4 relative bg-primary shrink-0`}>
         <Image
           alt=""
-          src={product.media[0].url}
+          src={product.media[0] ? product.media[0].url : ""}
           imageClassName="object-contain transition-[transform] group-hover:scale-105 bg-white"
         />
         {badgeText ? (

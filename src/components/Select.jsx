@@ -11,6 +11,7 @@ const Select = ({
   className,
   onChange,
   refEl,
+  label
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [selected, setSelected] = useState(defaultValue ? [defaultValue] : []);
@@ -76,6 +77,11 @@ const Select = ({
 
   return (
     <div className={className}>
+      {label ? (
+        <label htmlFor={name} className="mr-2 capitalize block mb-2">
+          {label}:
+        </label>
+      ) : null}
       <select
         ref={selectEl}
         id={name}
@@ -100,7 +106,7 @@ const Select = ({
       >
         <p
           ref={selectDivEl}
-          className="relative h-10 block leading-9 px-3 flex items-center pr-10"
+          className="relative h-9 block leading-9 px-3 flex items-center pr-10"
         >
           {icon ? (
             <span className="h-full py-2 mr-2 [&>*]:h-full">{icon}</span>

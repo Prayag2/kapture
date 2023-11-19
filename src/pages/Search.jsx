@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import {useLocation} from "react-router-dom";
 import { useFirestore } from "/src/contexts/FirestoreContext";
 import { useParams } from "react-router-dom";
 import Wrapper from "/src/components/Wrapper";
@@ -12,12 +13,14 @@ const Search = () => {
   const { categoryID } = useParams();
   const [productList, setProductList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
   const formEl = useRef();
   const inputEl = useRef();
 
   useEffect(() => {
     if (categoryID) {
       filterByCategory(categoryID).then((data) => {
+	console.log("Category ID", categoryID);
 	setProductList(data);
 	setLoading(false);
       })
@@ -27,7 +30,8 @@ const Search = () => {
         setLoading(false);
       });
     }
-  }, []);
+  }, [location.pathname]);
+
   useEffect(() => inputEl.current.focus(), []);
 
   const handleChange = (e) => {

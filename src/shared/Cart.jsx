@@ -4,7 +4,7 @@ import CartCard from "/src/components/CartCard";
 import Button from "/src/components/Button";
 
 const Cart = () => {
-  const { isCartOpen, setIsCartOpen, cartData } = useCart();
+  const { isCartOpen, setIsCartOpen, cartData, setSingleProduct } = useCart();
 
   return (
     <>
@@ -12,15 +12,13 @@ const Cart = () => {
         <div
           aria-label="cart backdrop"
           onClick={() => setIsCartOpen(false)}
-          className="fixed top-0 left-0 w-full h-full bg-primary z-40 opacity-25"
-        ></div>
+          className="fixed top-0 left-0 w-full h-full bg-primary z-40 opacity-25"></div>
       )}
       <div
         aria-label="shopping cart"
         className={`fixed top-0 transition-[right] duration-300 ${
           isCartOpen ? "right-0" : "right-[-100%]"
-        } w-full max-w-[25rem] h-full bg-background z-50 shadow-lg p-5 overflow-y-scroll`}
-      >
+        } w-full max-w-[25rem] h-full bg-background z-50 shadow-lg p-5 overflow-y-scroll`}>
         <Title className="text-center">Your Cart</Title>
         <div className="absolute top-4 right-4">
           <Button
@@ -37,8 +35,7 @@ const Cart = () => {
               <li
                 key={`cartItem-${cartItem.product.itemID}`}
                 aria-label="Cart Item"
-                className="mb-6"
-              >
+                className="mb-6">
                 <CartCard
                   product={cartItem.product}
                   quantity={cartItem.quantity}
@@ -49,6 +46,15 @@ const Cart = () => {
             <p className="text-center">Your Cart Is Empty</p>
           )}
         </ul>
+        <Button
+          onClick={() => {
+            setSingleProduct(null);
+	    setIsCartOpen(false);
+          }}
+          to="/checkout"
+          className="w-full">
+          Proceed to Checkout
+        </Button>
       </div>
     </>
   );
