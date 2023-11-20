@@ -5,7 +5,7 @@ import OrderSummary from "/src/components/OrderSummary";
 import Title from "/src/components/Title";
 import {useCheckout} from "/src/contexts/CheckoutContext";
 
-const CheckoutTemplate = ({ children }) => {
+const CheckoutTemplate = ({ children, onSubmit }) => {
   const { checkoutInfo } = useCheckout();
   const location = useLocation();
   const routeName = location.pathname.split("/")[2]
@@ -29,7 +29,7 @@ const CheckoutTemplate = ({ children }) => {
 	<div className="w-full">
 	  {children}
 	</div>
-	<OrderSummary />
+	<OrderSummary onSubmit={onSubmit} />
       </div>
     </Wrapper>
   );

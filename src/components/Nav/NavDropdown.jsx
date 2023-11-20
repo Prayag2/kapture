@@ -1,5 +1,5 @@
 import NavItem from "/src/components/Nav/NavItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const NavDropdown = ({ to, name, navLinks, touch, onClick }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,8 +12,7 @@ const NavDropdown = ({ to, name, navLinks, touch, onClick }) => {
         onClick={(e) => {
           toggleDropdown();
           onClick(e);
-        }}
-      >
+        }}>
         {name}
         <img
           className={`h-5 ml-4 inline-block ${!isOpen && "rotate-180"}`}
@@ -27,8 +26,7 @@ const NavDropdown = ({ to, name, navLinks, touch, onClick }) => {
             key={`dropdownTouchItem${id}`}
             onClick={toggleDropdown}
             className="block"
-            to={navLink.to}
-          >
+            to={navLink.to}>
             {navLink.name}
           </NavItem>
         ))}
@@ -37,10 +35,9 @@ const NavDropdown = ({ to, name, navLinks, touch, onClick }) => {
   ) : (
     <div
       className="relative"
-      onClick={()=>setIsOpen(prev => !prev)}
+      onClick={() => setIsOpen((prev) => !prev)}
       onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
+      onMouseLeave={() => setIsOpen(false)}>
       <NavItem className="py-4" to={to}>
         {name}
         <img
@@ -52,14 +49,12 @@ const NavDropdown = ({ to, name, navLinks, touch, onClick }) => {
       <div
         className={`bg-secondary absolute top-8 px-5 py-3 space-y-3 rounded-md w-60 shadow-md ${
           isOpen ? "block" : "hidden"
-        }`}
-      >
+        }`}>
         {navLinks.map((navLink, id) => (
           <NavItem
             key={`dropdownHoverItem-${id}`}
             className="block"
-            to={navLink.to}
-          >
+            to={navLink.to}>
             {navLink.name}
           </NavItem>
         ))}

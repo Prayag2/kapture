@@ -4,7 +4,8 @@ import CartCard from "/src/components/CartCard";
 import Button from "/src/components/Button";
 
 const Cart = () => {
-  const { isCartOpen, setIsCartOpen, cartData, setSingleProduct } = useCart();
+  const { isCartOpen, setIsCartOpen, cartData, setSingleProduct, isCartEmpty } =
+    useCart();
 
   return (
     <>
@@ -46,15 +47,17 @@ const Cart = () => {
             <p className="text-center">Your Cart Is Empty</p>
           )}
         </ul>
-        <Button
-          onClick={() => {
-            setSingleProduct(null);
-	    setIsCartOpen(false);
-          }}
-          to="/checkout"
-          className="w-full">
-          Proceed to Checkout
-        </Button>
+        {!isCartEmpty() && (
+          <Button
+            onClick={() => {
+              setSingleProduct(null);
+              setIsCartOpen(false);
+            }}
+            to="/checkout"
+            className="w-full fixed bottom-0">
+            Proceed to Checkout
+          </Button>
+        )}
       </div>
     </>
   );

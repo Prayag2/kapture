@@ -20,7 +20,7 @@ const CheckoutContextProvider = ({ children }) => {
           fullName: null,
           emailAddress: null,
           mobile: null,
-          mobileVerified: null,
+	  altMobile: null
         },
       },
       {
@@ -57,8 +57,8 @@ const CheckoutContextProvider = ({ children }) => {
     checkoutInfo: localCheckoutInfo,
   });
 
-  const updateCheckoutInfo = (tabIndex, property, val) => {
-    setCheckoutInfo((prev) => {
+  const updateCheckoutInfo = async (tabIndex, property, val) => {
+    await setCheckoutInfo((prev) => {
       let updatedCheckoutInfo = { ...prev };
       updatedCheckoutInfo.checkoutInfo[tabIndex][property] = val;
       setLocalCheckoutInfo(updatedCheckoutInfo.checkoutInfo);

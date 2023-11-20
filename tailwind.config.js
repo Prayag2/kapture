@@ -20,6 +20,7 @@ export default {
       "accent-light": "#7151b7",
       accent: "#6143a3",
       "accent-dark": "#4b347f",
+      error: "#e74c3c"
     },
     fontFamily: {
       display: ["Urbanist", ...defaultTheme.fontFamily.sans],

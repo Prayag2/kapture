@@ -77,7 +77,7 @@ const FirestoreContextProvider = ({ children }) => {
           updatedData.push(item);
         }
       });
-      data = updatedData
+      data = updatedData;
       return updatedData;
     });
     return data;
@@ -98,19 +98,22 @@ const FirestoreContextProvider = ({ children }) => {
     } else throw new Error("Product not found");
   };
 
-  const getAllProducts = async (showDisabled=false) => {
+  const getAllProducts = async (showDisabled = false) => {
     console.log("[FirestoreContext] getAllProducts Called");
     let data, q;
 
     if (allProductsLoaded) {
       data = productData;
-      console.log("[FirestoreContext] [getAllProducts] productData", productData);
+      console.log(
+        "[FirestoreContext] [getAllProducts] productData",
+        productData,
+      );
     } else {
       if (productData.length > 0) {
         console.log(
           "[FirestoreContext] [getAllProducts] ONE OR MORE PRODUCTS EXIST",
         );
-	const existingItemIDs = productData.map(item => item.itemID);
+        const existingItemIDs = productData.map((item) => item.itemID);
         q = showDisabled
           ? query(
               collection(db, "product"),
@@ -144,7 +147,7 @@ const FirestoreContextProvider = ({ children }) => {
     return data.filter((item) => item.categoryID === categoryID);
   };
 
-  const searchProduct = async (searchQuery, includeDisabled=false) => {
+  const searchProduct = async (searchQuery, includeDisabled = false) => {
     console.log("[FirestoreContext] searchProduct Called");
     const data = await getAllProducts(includeDisabled);
     if (!searchQuery) return data;

@@ -1,18 +1,19 @@
-import React, {useMemo} from "react";
+import React, { useMemo } from "react";
 import Title from "/src/components/Title";
 import Button from "/src/components/Button";
 import Hr from "/src/components/Hr";
 import MiniProductCard from "/src/components/MiniProductCard";
 import { useCart } from "/src/contexts/CartContext";
 
-const OrderSummary = ({ nextLink }) => {
+const OrderSummary = ({ nextLink, onSubmit }) => {
   const { cartData, singleProduct } = useCart();
   const totalAmount = useMemo(() => {
     if (singleProduct !== null) {
       return singleProduct.quantity * singleProduct.product.price;
     } else if (cartData.length > 0) {
       return cartData.reduce(
-        (p, c) => p.quantity * p.product.price + c.quantity * c.product.price,
+        (total, current) => total + current.quantity * current.product.price,
+        0,
       );
     }
   }, [cartData, singleProduct]);
@@ -47,7 +48,7 @@ const OrderSummary = ({ nextLink }) => {
         <p>Delivery</p>
         <p className="text-primary">FREE</p>
       </div>
-      <Button className="w-full mt-5">Proceed to Next Step</Button>
+      <Button className="w-full mt-5" onClick={e => onSubmit()}>Proceed to Next Step</Button>
     </div>
   );
 };

@@ -47,11 +47,10 @@ const ProductCard = ({ product, badgeText, horizontal, className }) => {
         </div>
         <Button
           colour="accent"
-          onClick={() =>
-            isProductInCart(product.itemID)
-              ? setIsCartOpen(true)
-              : addToCart(product, 1, 0)
-          }
+          onClick={() => {
+            addToCart(product, 1, 0);
+            setIsCartOpen(true);
+          }}
           icon={
             <img
               className="invert"

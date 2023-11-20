@@ -1,5 +1,6 @@
 import { useState, useContext, createContext, useMemo, useEffect } from "react";
 import { useLocalStorage } from "/src/hooks/LocalStorage";
+import { useFirestore } from "/src/contexts/FirestoreContext";
 
 const cartContext = createContext();
 export const useCart = () => useContext(cartContext);
@@ -16,6 +17,7 @@ const CartContextProvider = ({ children }) => {
     "cart",
     [],
   );
+  const { productData } = useFirestore();
 
   useEffect(() => {
     setCartData(localCart);
@@ -54,7 +56,7 @@ const CartContextProvider = ({ children }) => {
   };
 
   const isCartEmpty = () => {
-    return localCart.length === 0
+    return localCart.length === 0;
   };
 
   const deleteFromCart = (itemID) => {
@@ -77,10 +79,9 @@ const CartContextProvider = ({ children }) => {
         isCartEmpty,
         cartQuantity,
         isProductInCart,
-	singleProduct,
-	setSingleProduct
-      }}
-    >
+        singleProduct,
+        setSingleProduct,
+      }}>
       {children}
     </cartContext.Provider>
   );
