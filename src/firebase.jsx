@@ -9,13 +9,13 @@ import {
 } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STOREAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyCmMAKiK81cnjRNaEX83ksEZnPVPB8_GOA",
+  authDomain: "kapture-d92ee.firebaseapp.com",
+  projectId: "kapture-d92ee",
+  storageBucket: "kapture-d92ee.appspot.com",
+  messagingSenderId: "1022022066979",
+  appId: "1:1022022066979:web:194999783bc923cc37e296",
+  measurementId: "G-YNL7QZ96CP",
 };
 
 // Initialize Firebase
