@@ -65,13 +65,12 @@ const ImageGallery = ({ media, actionButton, onActionButtonClick }) => {
           ref={imageWrapper}
           onClick={toggleZoom}
           onMouseMove={handleZoom}
-          onMouseLeave={zoomOutImage}
           className={`w-full overflow-hidden rounded-md aspect-square bg-white cursor-zoom-in`}>
           <Image
             ref={mainImage}
             src={currentMedium.url}
             alt={currentMedium.alt}
-            imageClassName="w-full h-full object-contain transition-all duration-200 ease-out"
+            imageClassName="w-full h-full object-contain transition-all duration-300 ease-out"
           />
         </div>
       )}

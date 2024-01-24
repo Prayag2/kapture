@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-const Checkbox = ({ name, placeholder, value }) => {
+const Checkbox = ({ name, placeholder, value, required }) => {
   const [checked, setChecked] = useState(value);
   const checkboxEl = useRef();
   const toggleChecked = () => {
@@ -22,6 +22,7 @@ const Checkbox = ({ name, placeholder, value }) => {
         type="checkbox"
         ref={checkboxEl}
 	defaultChecked={value}
+	required={required}
       />
       <div
         className={`p-1 h-5 aspect-square rounded overflow-hidden ${
@@ -51,6 +52,7 @@ const Checkbox = ({ name, placeholder, value }) => {
 Checkbox.defaultProps = {
   placeholder: "Toggle Me",
   value: false,
+  required: false
 };
 
 export default Checkbox;

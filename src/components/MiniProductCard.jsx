@@ -13,7 +13,7 @@ const MiniProductCard = ({ product, quantity, className }) => {
         <p className="truncate w-full">{product.name}</p>
         <div className="flex justify-between">
           <p>Quantity: {quantity}</p>
-          <p>₹ {product.price*quantity}</p>
+          <p>{quantity} &times; ₹{product.price} = ₹{product.price*quantity}</p>
         </div>
       </div>
     </div>

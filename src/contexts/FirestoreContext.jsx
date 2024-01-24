@@ -31,9 +31,7 @@ const FirestoreContextProvider = ({ children }) => {
   const [productData, setProductData] = useState([]);
   const [allProductsLoaded, setAllProductsLoaded] = useState(false);
 
-  useEffect(() => {
-    console.log("[FirestoreContext] Product Data Updated", productData);
-  }, [productData]);
+  useEffect(() => {}, [productData]);
 
   useEffect(() => {
     if (!categoryData.length) {
@@ -44,7 +42,6 @@ const FirestoreContextProvider = ({ children }) => {
   }, []);
 
   const fetchData = async (query) => {
-    console.log("[FirestoreContext] fetchData called");
     let data = [];
     const response = await getDocs(query);
     response.forEach((item) => {
@@ -54,19 +51,14 @@ const FirestoreContextProvider = ({ children }) => {
   };
 
   const productLoaded = (itemID) => {
-    console.log("[FirestoreContext] productLoaded called");
-    console.log("[FirestoreContext] [productLoaded] productData", productData);
     if (productData.some((product) => product.itemID === itemID)) {
-      console.log("[FirestoreContext] [productLoaded] TRUE", itemID);
       return true;
     } else {
-      console.log("[FirestoreContext] [productLoaded] FALSE", itemID);
       return false;
     }
   };
 
   const updateProductData = (data) => {
-    console.log("[FirestoreContext] updateProductData Called");
     setProductData((prev) => {
       const updatedData = [...prev];
       data.forEach((item) => {
@@ -84,12 +76,10 @@ const FirestoreContextProvider = ({ children }) => {
   };
 
   const getProduct = async (itemID) => {
-    console.log("[FirestoreContext] getProduct Called");
     if (productLoaded(itemID)) {
       return productData.find((item) => item.itemID === itemID);
     }
 
-    console.log("[FirestoreContext] [getProduct] Fetching Product", itemID);
     const response = await getDoc(doc(db, "product", itemID));
     if (response.exists()) {
       const product = { itemID: itemID, ...response.data() };
@@ -99,20 +89,12 @@ const FirestoreContextProvider = ({ children }) => {
   };
 
   const getAllProducts = async (showDisabled = false) => {
-    console.log("[FirestoreContext] getAllProducts Called");
     let data, q;
 
     if (allProductsLoaded) {
       data = productData;
-      console.log(
-        "[FirestoreContext] [getAllProducts] productData",
-        productData,
-      );
     } else {
       if (productData.length > 0) {
-        console.log(
-          "[FirestoreContext] [getAllProducts] ONE OR MORE PRODUCTS EXIST",
-        );
         const existingItemIDs = productData.map((item) => item.itemID);
         q = showDisabled
           ? query(
@@ -148,7 +130,6 @@ const FirestoreContextProvider = ({ children }) => {
   };
 
   const searchProduct = async (searchQuery, includeDisabled = false) => {
-    console.log("[FirestoreContext] searchProduct Called");
     const data = await getAllProducts(includeDisabled);
     if (!searchQuery) return data;
     return data.filter(
@@ -160,15 +141,29 @@ const FirestoreContextProvider = ({ children }) => {
   };
 
   const getProductVariations = async (mainProduct) => {
-    console.log("[FirestoreContext] getProductVariations Called");
-    return await fetchData(
-      query(
-        collection(db, "product"),
-        orderBy("__name__"),
-        where("__name__", "in", mainProduct.variations.products),
-        where("enabled", "==", true),
-      ),
-    );
+    let data;
+    try {
+      console.log(
+        "[FirestoreContext] Product Variations",
+        mainProduct.variations.products,
+      );
+      data = await fetchData(
+        query(
+          collection(db, "product"),
+          orderBy("__name__"),
+          where(
+            "__name__",
+            "in",
+            mainProduct.variations.products,
+          ),
+          where("enabled", "==", true),
+        ),
+      );
+    } catch (err) {
+      alert(err);
+      return [];
+    }
+    return data;
   };
 
   const uploadFiles = async (directory, files) => {

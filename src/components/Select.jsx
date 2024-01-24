@@ -11,7 +11,8 @@ const Select = ({
   className,
   onChange,
   refEl,
-  label
+  label,
+  required,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [selected, setSelected] = useState(defaultValue ? [defaultValue] : []);
@@ -19,17 +20,20 @@ const Select = ({
   const selectDivEl = useRef();
 
   useEffect(() => {
-    document.addEventListener("click", (e) => {
+    const handleClickOutside = (e) => {
       if (e.target === selectDivEl.current) {
         e.stopPropagation();
         return;
       }
       setExpanded(false);
-    });
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
   useEffect(() => {
     if (refEl) refEl.current = selectEl.current;
+    if (selectEl.current && selectEl.current.value) setSelected(selectEl.current.value);
   }, [selectEl.current]);
 
   const colours = {
@@ -79,7 +83,8 @@ const Select = ({
     <div className={className}>
       {label ? (
         <label htmlFor={name} className="mr-2 capitalize block mb-2">
-          {label}:
+          {label}
+          {required ? <span className="text-error">*</span> : ""}:
         </label>
       ) : null}
       <select
@@ -88,8 +93,8 @@ const Select = ({
         name={name}
         className="hidden"
         defaultValue={defaultValue}
-        multiple={multiple}
-      >
+        required={required}
+        multiple={multiple}>
         {options.map((option, id) => (
           <option key={`hidden-option-${id}`} value={option}>
             {option}
@@ -102,28 +107,25 @@ const Select = ({
         onMouseDown={(e) => e.preventDefault()}
         tabIndex="0"
         onFocus={() => setExpanded(true)}
-        onBlur={() => setExpanded(false)}
-      >
+        onBlur={() => setExpanded(false)}>
         <p
           ref={selectDivEl}
-          className="relative h-9 block leading-9 px-3 flex items-center pr-10"
-        >
+          className="relative h-9 block leading-9 px-3 flex items-center pr-10">
           {icon ? (
             <span className="h-full py-2 mr-2 [&>*]:h-full">{icon}</span>
           ) : null}
           {multiple
             ? placeholder
             : selected.length > 0
-            ? `${placeholder}: ${selected}`
-            : placeholder}
+              ? `${placeholder}: ${selected}`
+              : placeholder}
 
           <span className="h-4 absolute top-1/2 right-2 translate-y-[-50%]">
             <svg
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className={`h-full ${colours[colour].fill}`}
-            >
+              className={`h-full ${colours[colour].fill}`}>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -135,8 +137,7 @@ const Select = ({
         <div
           className={`${!expanded && "hidden"} absolute top-12 ${
             colours[colour].bg
-          } rounded-md left-0 w-full py-2 max-h-[10rem] overflow-y-scroll z-10 shadow-md`}
-        >
+          } rounded-md left-0 w-full py-2 max-h-[10rem] overflow-y-scroll z-10 shadow-md`}>
           {options.map((option, id) => {
             if (multiple && selected.includes(option)) return null;
             return (
@@ -145,8 +146,7 @@ const Select = ({
                 onClick={(e) => enableChoice(e.target.dataset.value, id)}
                 data-value={option}
                 className={`mx-2 px-3 h-8 rounded-md flex items-center ${colours[colour].hover}`}
-                tabIndex={-1}
-              >
+                tabIndex={-1}>
                 {option}
               </div>
             );
@@ -158,13 +158,11 @@ const Select = ({
         selected.map((option, key) => (
           <div
             key={`selected-${key}`}
-            className="mt-2 relative px-3 h-9 leading-9 bg-secondary rounded-md"
-          >
+            className="mt-2 relative px-3 h-9 leading-9 bg-secondary rounded-md">
             {option}
             <span
               onClick={() => disableChoice(option)}
-              className="select-none flex items-center justify-center absolute cursor-pointer right-2 top-1/2 translate-y-[-50%] w-5 h-5 rounded bg-accent text-background"
-            >
+              className="select-none flex items-center justify-center absolute cursor-pointer right-2 top-1/2 translate-y-[-50%] w-5 h-5 rounded bg-accent text-background">
               ⨯
             </span>
           </div>
@@ -181,6 +179,7 @@ Select.defaultProps = {
   className: "",
   onChange: () => {},
   refEl: null,
+  required: false,
 };
 
 export default Select;

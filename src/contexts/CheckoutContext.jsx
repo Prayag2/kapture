@@ -2,33 +2,30 @@ import CheckoutContact from "/src/pages/CheckoutContact";
 import CheckoutShipping from "/src/pages/CheckoutShipping";
 import CheckoutPayment from "/src/pages/CheckoutPayment";
 import NotFound from "/src/pages/NotFound";
-import { useState, useMemo, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { useLocalStorage } from "/src/hooks/LocalStorage";
 
 const checkoutContext = createContext();
 export const useCheckout = () => useContext(checkoutContext);
 
 const CheckoutContextProvider = ({ children }) => {
+  // stepID is also used for the route so it must be unique
   const [localCheckoutInfo, setLocalCheckoutInfo, removeLocalCheckoutInfo] =
-    useLocalStorage("checkoutInfo", [
-      {
+    useLocalStorage("checkoutInfo", {
+      contact: {
         name: "Contact Information",
-        completed: false,
-        route: "contact",
-        condition: true,
-        formInfo: {
+        accessible: true,
+        formData: {
           fullName: null,
           emailAddress: null,
           mobile: null,
-	  altMobile: null
+          altMobile: null,
         },
       },
-      {
+      shipping: {
         name: "Shipping Details",
-        completed: false,
-        route: "shipping",
-        condition: false,
-        formInfo: {
+        accessible: false,
+        formData: {
           flat: null,
           area: null,
           landmark: null,
@@ -37,37 +34,100 @@ const CheckoutContextProvider = ({ children }) => {
           pincode: null,
         },
       },
-      {
+      payment: {
+        accessible: false,
         name: "Payment Method",
-        completed: false,
-        route: "payment",
-        condition: false,
       },
-    ]);
+    });
 
-  // Two separate properties inside checkoutinfo since we can't store component references
-  // in local storage as strings. We'll only be storing the checkoutInfo part in local storage,
-  // and not checkoutPages.
-  const [checkoutInfo, setCheckoutInfo] = useState({
-    checkoutPages: [
-      <CheckoutContact />,
-      <CheckoutShipping />,
-      <CheckoutPayment />,
-    ],
-    checkoutInfo: localCheckoutInfo,
-  });
+  const checkoutPages = {
+    contact: <CheckoutContact />,
+    shipping: <CheckoutShipping />,
+    payment: <CheckoutPayment />,
+  };
 
-  const updateCheckoutInfo = async (tabIndex, property, val) => {
-    await setCheckoutInfo((prev) => {
+  const [checkoutInfo, setCheckoutInfo] = useState(localCheckoutInfo);
+  const updateCheckoutInfo = (stepID, property, val) => {
+    setCheckoutInfo((prev) => {
       let updatedCheckoutInfo = { ...prev };
-      updatedCheckoutInfo.checkoutInfo[tabIndex][property] = val;
-      setLocalCheckoutInfo(updatedCheckoutInfo.checkoutInfo);
+      updatedCheckoutInfo[stepID][property] = val;
+      console.log("[CheckoutContext] updateCheckoutInfo called]")
+      console.log(updatedCheckoutInfo);
       return updatedCheckoutInfo;
     });
   };
 
+  const handleFormChange = async (formEl, curStepID, nextStepID) => {
+    const formData = new FormData(formEl);
+    let data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+    updateCheckoutInfo(curStepID, "formData", data);
+    if (formEl.checkValidity()) {
+      console.log("[CheckoutContext] handleFormChange called");
+      console.log(data);
+      updateCheckoutInfo(nextStepID, "accessible", true);
+      return true;
+    } else {
+      updateCheckoutInfo(nextStepID, "accessible", false);
+      return false;
+    }
+  };
+
+  const setValue = (name, value) => {
+    const el = document.getElementById(name);
+    if (el) el.value = value;
+  };
+
+  const populateFormData = (formEl, curStepID, nextStepID) => {
+    console.log("[CheckoutContext] populateFormData called]");
+    const handleInput = () => {
+      setTimeout(
+        () => handleFormChange(formEl.current, curStepID, nextStepID),
+        0,
+      );
+    };
+    if (formEl.current) {
+      formEl.current.getElementsByTagName("input")[0].focus();
+      Object.keys(checkoutInfo[curStepID].formData).forEach((name) => {
+        setValue(name, checkoutInfo[curStepID].formData[name]);
+      });
+      formEl.current.querySelectorAll("input,select").forEach((el) => {
+        el.addEventListener("input", handleInput);
+      });
+    }
+    return () => {
+      if (formEl.current) {
+        formEl.current.querySelectorAll("input, select").forEach((el) => {
+          el.removeEventListener("input", handleInput);
+        });
+      }
+    };
+  };
+
+  useEffect(() => {
+    // Update local storage on unload
+    const handleBeforeUnload = (e) => {
+      setLocalCheckoutInfo(checkoutInfo);
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   return (
-    <checkoutContext.Provider value={{ checkoutInfo, updateCheckoutInfo }}>
+    <checkoutContext.Provider
+      value={{
+        checkoutInfo,
+        updateCheckoutInfo,
+        checkoutPages,
+        handleFormChange,
+        populateFormData,
+      }}>
       {children}
     </checkoutContext.Provider>
   );

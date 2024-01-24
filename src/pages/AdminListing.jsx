@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useFirestore } from "/src/contexts/FirestoreContext";
+import { useDialog } from "/src/contexts/DialogContext";
+import { useValidate } from "/src/hooks/Validate";
 import Title from "/src/components/Title";
 import ImageGallery from "/src/components/ImageGallery";
 import Image from "/src/components/Image";
@@ -10,7 +12,6 @@ import Button from "/src/components/Button";
 import Checkbox from "/src/components/Checkbox";
 import Loading from "/src/components/Loading";
 import Select from "/src/components/Select";
-import { useDialog } from "/src/contexts/DialogContext";
 
 const AdminListing = () => {
   const {
@@ -43,6 +44,8 @@ const AdminListing = () => {
   const [productMedia, setProductMedia] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [productList, setProductList] = useState([]);
+  const { handleFormSubmit } = useValidate();
+
   const navigate = useNavigate();
   const location = useLocation();
   const searchEl = useRef();
@@ -63,7 +66,6 @@ const AdminListing = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("[AdminListing] Getting Product");
         const product = await getProduct(itemID);
         setProductSpecifications(() => {
           return product.specifications;
@@ -71,18 +73,13 @@ const AdminListing = () => {
         setProductMedia(product.media);
         if (product.variations.name) {
           setVariationType(product.variations.name);
-          console.log("[AdminListing] Getting Product Variations");
           const data = await getProductVariations(product);
           setVariations(data);
         }
-        console.log("[AdminListing] searchProduct Called");
-        console.log("[AdminListing] productData", productData);
         const productListData = await searchProduct(undefined, productData);
-        console.log("[AdminListing] categoryData", categoryData);
         const category = categoryData.find(
           (item) => item.itemID === product.categoryID,
         );
-        console.log("[AdminListing] productCategory", category);
         if (category) setProductCategory(category);
         else setProductCategory({ name: "", itemID: "" });
         setProductList(productListData);
@@ -102,7 +99,8 @@ const AdminListing = () => {
     });
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (e) => {
+    e.preventDefault();
     const formData = new FormData(formEl.current);
 
     const enabled = formData.get("enabled") === "on";
@@ -114,26 +112,17 @@ const AdminListing = () => {
     const description = formData.get("description");
     const tags = formData.get("tags");
     const warranty = formData.get("warranty");
+    const length = parseFloat(formData.get("length"));
+    const width = parseFloat(formData.get("width"));
+    const height = parseFloat(formData.get("height"));
+    const weight = parseFloat(formData.get("weight"));
+
     const variationName = variationNameEl.current.value;
     const categoryID = productCategory.itemID;
     const variationObj = {
       name: variationType,
       products: [product.itemID, ...variations.map((item) => item.itemID)],
     };
-
-    if (
-      !name ||
-      !price ||
-      !mrp ||
-      !quantity ||
-      !description ||
-      !tags ||
-      !warranty ||
-      !categoryID
-    ) {
-      await showAlert("Please fill out all the fields!!");
-      return;
-    }
 
     const docObj = {
       enabled: enabled,
@@ -149,6 +138,10 @@ const AdminListing = () => {
       variations: variationObj,
       categoryID,
       variationName,
+      length,
+      width,
+      height,
+      weight,
     };
     await updateDoc(doc(db, "product", product.itemID), docObj);
 
@@ -268,20 +261,30 @@ const AdminListing = () => {
 
   const handleDeleteListing = async () => {
     const confirm = await showPrompt(
-      'Sahi me DELETE karna hai to "CONFIRM DELETE" type karo!',
+      'Type "CONFIRM DELETE" to delete this listing',
     );
     if (confirm !== "CONFIRM DELETE") return;
 
-    if (variationType && variations.length > 0) {
+    if (variationType && variations.length > 1) {
       const variationObj = {
         name: variationType,
-        products: variations.filter((item) => item.itemID !== product.itemID),
+        products: product.variations.products.filter(itemID => itemID !== product.itemID)
       };
       for (let item of variations) {
         await updateDoc(doc(db, "product", item.itemID), {
           variations: variationObj,
         });
       }
+    }
+    // Delete all media
+    try {
+      productMedia.forEach(async (item) => {
+        await deleteObject(
+          ref(storage, `images/products/${product.itemID}/${item.fileName}`),
+        );
+      });
+    } catch (err) {
+      showAlert(err);
     }
     await deleteDoc(doc(db, "product", product.itemID));
     setProductData((prev) =>
@@ -306,7 +309,13 @@ const AdminListing = () => {
   ) : (
     <section className="w-full" key={product.itemID}>
       <Title>Manage Listing</Title>
-      <form className="space-y-2" ref={formEl}>
+      <form
+        className="space-y-2"
+        ref={formEl}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSaveChanges(e);
+        }}>
         <Checkbox
           name="enabled"
           value={product.enabled}
@@ -321,39 +330,90 @@ const AdminListing = () => {
           name="name"
           label="Name"
           otherProps={{ defaultValue: product.name }}
+          required
         />
         <Input
           name="price"
           type="number"
           label="Price"
-          otherProps={{ defaultValue: product.price }}
+          otherProps={{ defaultValue: product.price, step: "0.01" }}
+          required
+          pattern={/^[0-9]+\.?[0-9]*$/}
+          invalidMessage="Please enter a valid price"
         />
         <Input
           name="mrp"
           type="number"
           label="MRP"
-          otherProps={{ defaultValue: product.mrp }}
+          otherProps={{ defaultValue: product.mrp, step: "0.01" }}
+          required
+          pattern={/^[0-9]+\.?[0-9]*$/}
+          invalidMessage="Please enter a valid MRP"
         />
         <Input
           name="quantity"
           type="number"
           label="Quantity"
-          otherProps={{ defaultValue: product.quantity }}
+          otherProps={{ defaultValue: product.quantity, step: "1" }}
+          required
+          pattern={/^[0-9]+$/}
+          invalidMessage="Please enter a valid quantity"
+        />
+        <Input
+          name="length"
+          type="number"
+          label="Length (cm)"
+          otherProps={{ defaultValue: product.length, step: "0.01" }}
+          required
+          pattern={/^[0-9]+\.?[0-9]*$/}
+          invalidMessage="Please enter a valid length in centimeters"
+        />
+        <Input
+          name="width"
+          type="number"
+          label="Width (cm)"
+          otherProps={{ defaultValue: product.width, step: "0.01" }}
+          required
+          pattern={/^[0-9]+\.?[0-9]*$/}
+          invalidMessage="Please enter a valid width in centimeters"
+        />
+        <Input
+          name="height"
+          type="number"
+          label="Height (cm)"
+          otherProps={{ defaultValue: product.height, step: "0.01" }}
+          required
+          pattern={/^[0-9]+\.?[0-9]*$/}
+          invalidMessage="Please enter a valid height in centimeters"
+        />
+        <Input
+          name="weight"
+          type="number"
+          label="Weight (kg)"
+          otherProps={{ defaultValue: product.weight, step: "0.001" }}
+          required
+          pattern={/^[0-9]+\.?[0-9]*$/}
+          invalidMessage="Please enter a valid weight in kilograms"
         />
         <TextArea
           name="description"
           label="Description"
           otherProps={{ defaultValue: product.description }}
+          required
         />
         <Input
           name="tags"
           label="Tags"
           otherProps={{ defaultValue: product.tags.join(",") }}
+          required
+          pattern={/^([a-zA-Z0-9_\- ]+(,|, |$))+$/}
+          invalidMessage="Please enter tags separated by commas"
         />
         <TextArea
           name="warranty"
           label="Warranty"
           otherProps={{ defaultValue: product.warranty }}
+          required
         />
       </form>
       <div className="mt-4 mb-8">
@@ -364,6 +424,7 @@ const AdminListing = () => {
             placeholder="Category"
             refEl={categoryEl}
             defaultValue={productCategory.name}
+            required
             onChange={(val) =>
               setProductCategory(
                 categoryData.find((item) => item.name === val.value),
@@ -456,7 +517,7 @@ const AdminListing = () => {
                   <Image
                     className="aspect-square"
                     imageClassName="object-cover"
-                    src={variation.media[0].url}
+                    src={variation.media[0]?.url}
                   />
                 </div>
                 <div>
@@ -536,7 +597,9 @@ const AdminListing = () => {
       </div>
       <div className="w-full bg-secondary py-5 fixed bottom-0 left-0 flex justify-center gap-5">
         <Button to={`/product/${product.itemID}`}>Product Page</Button>
-        <Button onClick={handleSaveChanges}>Save Changes</Button>
+        <Button onClick={() => handleFormSubmit(formEl.current)}>
+          Save Changes
+        </Button>
         <Button colour="accent" onClick={handleDuplicateListing}>
           Duplicate Listing
         </Button>

@@ -1,5 +1,3 @@
-import React from "react";
-
 export const useLocalStorage = (key, defaultValue) => {
   const deleteValue = () => {
     localStorage.removeItem(key);

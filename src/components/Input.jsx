@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useValidate } from "/src/hooks/Validate";
 
 function Input({
   placeholder,
@@ -12,14 +13,15 @@ function Input({
   pattern,
   invalidMessage
 }) {
-  const [isValid, setIsValid] = useState(true);
+  const [isInputValid, setIsInputValid] = useState(true);
+  const {isValid} = useValidate();
   const validateInput = (e) => {
-    if (!pattern.test(e.target.value) && (!required ? e.target.value.length > 0 : true)) {
-      e.target.setCustomValidity(invalidMessage);
-      setIsValid(false);
-    } else {
+    if (isValid(pattern, e.target.value, required)) {
       e.target.setCustomValidity("");
-      setIsValid(true);
+      setIsInputValid(true);
+    } else {
+      e.target.setCustomValidity(invalidMessage);
+      setIsInputValid(false);
     }
   };
 
@@ -31,7 +33,7 @@ function Input({
         </label>
       ) : null}
       <div
-        className={`px-3 h-9 rounded-md bg-secondary flex items-center w-full border-2 ${isValid ? "border-none" : "border-error"}`}>
+        className={`px-3 h-9 rounded-md bg-secondary flex items-center w-full border-2 ${isInputValid ? "border-none" : "border-error"}`}>
         {icon ? (
           <span className="h-full py-2 mr-2 [&>*]:h-full">{icon}</span>
         ) : null}
@@ -39,14 +41,14 @@ function Input({
           type={type}
           id={name}
           name={name}
-          className="outline-none placeholder:text-primary bg-secondary w-full"
+          className="outline-none placeholder:text-primary bg-secondary w-full peer"
           placeholder={placeholder}
           required={required}
 	  onChange={e => pattern ? validateInput(e) : null}
           {...otherProps}
         />
       </div>
-      {!isValid && <p className="mt-2 text-error">{invalidMessage}</p> }
+      {!isInputValid && <p className="mt-2 text-error">{invalidMessage}</p> }
     </div>
   );
 }
@@ -56,7 +58,7 @@ Input.defaultProps = {
   placeholder: "Input",
   label: "",
   required: false,
-  pattern: /^([a-z]|[A-Z]|\s)+$/,
+  pattern: /^.+$/,
   invalidMessage: "This field can't be empty!"
 };
 

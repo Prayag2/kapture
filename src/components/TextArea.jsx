@@ -8,6 +8,7 @@ function TextArea({
   otherProps,
   className,
   label,
+  required
 }) {
   const textAreaEl = useRef();
   const [textAreaHeight, setTextAreaHeight] = useState();
@@ -19,6 +20,7 @@ function TextArea({
       {label ? (
         <label htmlFor={name} className="mr-2 capitalize block mb-2">
           {label}:
+	  {required ? <span className="text-error">*</span> : null}
         </label>
       ) : null}
       <div
@@ -37,6 +39,7 @@ function TextArea({
             setTextAreaHeight(textAreaEl.current.scrollHeight + "px")
           }
           placeholder={placeholder}
+	  required={required}
           {...otherProps}></textarea>
       </div>
     </div>
@@ -47,6 +50,7 @@ TextArea.defaultProps = {
   type: "text",
   placeholder: "TextArea",
   label: "",
+  required: false
 };
 
 export default TextArea;

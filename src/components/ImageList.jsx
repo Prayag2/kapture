@@ -29,10 +29,10 @@ const ImageList = ({
             }`}>
             <Image
               imageClassName={`object-contain bg-white ${
-                medium.type === "video" && "p-2"
+                medium?.type === "video" && "p-2"
               }`}
-              src={medium.isVideo ? "/images/icons/play.svg" : medium.url}
-              alt={medium.alt}
+              src={medium?.isVideo ? "/images/icons/play.svg" : medium?.url}
+              alt={medium?.alt}
             />
           </button>
         </li>
