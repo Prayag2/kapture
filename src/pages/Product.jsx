@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useCart } from "/src/contexts/CartContext";
 import { useFirestore } from "/src/contexts/FirestoreContext";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "/src/firebase";
 import Accordian from "/src/components/Accordian";
 import Button from "/src/components/Button";
 import Hr from "/src/components/Hr";
@@ -14,7 +16,8 @@ import Wrapper from "/src/components/Wrapper";
 
 const Product = () => {
   const { itemID } = useParams();
-  const { isProductInCart, addToCart, setIsCartOpen, setSingleProduct } = useCart();
+  const { isProductInCart, addToCart, setIsCartOpen, setSingleProduct } =
+    useCart();
   const { getProduct, getProductVariations } = useFirestore();
 
   const [variations, setVariations] = useState([]);
@@ -22,6 +25,13 @@ const Product = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const quantityEl = useRef();
+
+  const testCloudFunction = async () => {
+    const helloWorld = httpsCallable(functions, "helloWorld");
+    helloWorld().then((result) => {
+      console.log(result.data);
+    });
+  };
 
   useEffect(() => {
     getProduct(itemID)
@@ -90,8 +100,9 @@ const Product = () => {
               colour="secondary"
               className="w-full"
               onClick={() => {
-		setSingleProduct({quantity: quantityEl.current.value, product})
-                navigate("/checkout");
+                testCloudFunction();
+                //setSingleProduct({quantity: quantityEl.current.value, product})
+                //navigate("/checkout");
               }}>
               Buy Now
             </Button>
@@ -99,7 +110,7 @@ const Product = () => {
               colour="accent"
               className="w-full"
               onClick={() => {
-		addToCart(product, quantityEl.current.value);
+                addToCart(product, quantityEl.current.value);
                 setIsCartOpen(true);
               }}
               icon={
