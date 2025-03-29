@@ -1,25 +1,11 @@
 # Kapture
 Official website for Kapture products.
 
-# Order Document (in orders collection)
-- orderID
-- productDetails
-  - productID
-  - quantity
-  - priceAtTimeOfPurchase
-- purchaseDate
-- invoiceURL
-- customerID
+## Deployment
+The website is deployed at: https://kapture-d92ee.web.app/
 
-# Customer Document (in customers collection)
-- customerID
-- name
-- street address
-- city
-- state
-- landmark (optional)
-- country
-- pincode
-- phone
-- alternatePhone (optional)
-- email
+## Testing
+- Clone this repository: `git clone https://github.com/prayag2/kapture`  
+- Make sure Node.js is installed.
+- Install dependencies: `npm i`
+- Run the project: `npm run dev`
